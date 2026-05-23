@@ -1,13 +1,20 @@
+interface Highlight {
+  text: string;
+  url: string;
+  ts: number;
+  tag?: string;
+}
+
 /**
  * 保存されたハイライトを現在のページに適用する
  */
 async function restoreHighlights() {
   const url = window.location.href;
   const data = await chrome.storage.local.get("highlights");
-  const highlights = data.highlights || [];
-  const pageHighlights = highlights.filter((item: any) => item.url === url);
+  const highlights: Highlight[] = data.highlights || [];
+  const pageHighlights = highlights.filter((item: Highlight) => item.url === url);
 
-  pageHighlights.forEach((item: any) => {
+  pageHighlights.forEach((item: Highlight) => {
     applyHighlight(item.text);
   });
 }
@@ -20,13 +27,14 @@ function applyHighlight(textToMatch: string) {
   
   // TreeWalkerを使ってテキストノードを走査
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-  let node;
+  let node = walker.nextNode();
   const nodesToHighlight: Node[] = [];
   
-  while (node = walker.nextNode()) {
+  while (node) {
     if (node.textContent && node.textContent.includes(textToMatch)) {
       nodesToHighlight.push(node);
     }
+    node = walker.nextNode();
   }
 
   nodesToHighlight.forEach(node => {

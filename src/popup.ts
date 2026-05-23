@@ -1,6 +1,13 @@
+interface Highlight {
+  text: string;
+  url: string;
+  ts: number;
+  tag?: string;
+}
+
 async function renderHighlights() {
   const data = await chrome.storage.local.get(["highlights", "isPremium", "trial_start_ts"]);
-  const highlights = data.highlights || [];
+  const highlights: Highlight[] = data.highlights || [];
   const isPremium = data.isPremium || false;
   const listContainer = document.getElementById("listContainer");
   if (!listContainer) return;
@@ -42,7 +49,7 @@ async function renderHighlights() {
     return;
   }
 
-  const listHtml = [...highlights].reverse().map((item: any) => {
+  const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = item.text.length > 50 ? item.text.substring(0, 50) + "..." : item.text;
     const tagHtml = item.tag ? `<span style="background: #e1f5fe; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; margin-right: 6px; color: #0277bd;">#${item.tag}</span>` : "";
     return `
@@ -80,8 +87,8 @@ async function renderHighlights() {
 
 async function deleteHighlight(ts: number) {
   const data = await chrome.storage.local.get("highlights");
-  let highlights = data.highlights || [];
-  highlights = highlights.filter((item: any) => item.ts !== ts);
+  let highlights: Highlight[] = data.highlights || [];
+  highlights = highlights.filter((item: Highlight) => item.ts !== ts);
   await chrome.storage.local.set({ highlights });
   renderHighlights();
 }
@@ -91,7 +98,7 @@ async function saveSelection() {
   if (!tab?.id) return;
 
   const data = await chrome.storage.local.get(["highlights", "isPremium"]);
-  const highlights = data.highlights || [];
+  const highlights: Highlight[] = data.highlights || [];
   const isPremium = data.isPremium || false;
 
   if (!isPremium && highlights.length >= 20) {
