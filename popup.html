@@ -1,1 +1,241 @@
-<!doctype html><html><head><meta charset="utf-8"></head><body style="width:320px;font-family:system-ui;padding:10px"><h3 id="appName"></h3><div id="app">…</div><script type="module" src="/src/popup.ts"></script></body></html>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      :root {
+        color-scheme: light;
+        --color-bg: #f6f8fb;
+        --color-surface: #ffffff;
+        --color-text: #17202a;
+        --color-muted: #5f6b7a;
+        --color-border: #dce3ea;
+        --color-primary: #1f6feb;
+        --color-primary-hover: #185abc;
+        --color-success-bg: #e8f5ed;
+        --color-success-text: #146c43;
+        --color-error-bg: #fdecec;
+        --color-error-text: #9f1d1d;
+        --color-warning-bg: #fff7ed;
+        --color-warning-text: #7a3f00;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 340px;
+        margin: 0;
+        padding: 16px;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      #appName {
+        margin: 0 0 12px;
+        color: var(--color-text);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      #app {
+        padding: 14px;
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        background: var(--color-surface);
+        box-shadow: 0 6px 18px rgb(16 24 40 / 8%);
+      }
+
+      .premiumArea {
+        margin-bottom: 12px;
+      }
+
+      .premiumBadge,
+      .trialCard {
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .premiumBadge {
+        border: 1px solid #b7dfc6;
+        background: var(--color-success-bg);
+        color: var(--color-success-text);
+        font-weight: 700;
+      }
+
+      .trialCard {
+        border: 1px solid #f1d2aa;
+        background: var(--color-warning-bg);
+        color: var(--color-warning-text);
+      }
+
+      .trialText {
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .fieldLabel {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--color-muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .textInput {
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 10px;
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--color-text);
+        font: inherit;
+      }
+
+      .textInput:focus,
+      .primaryButton:focus,
+      .secondaryButton:focus,
+      .deleteBtn:focus {
+        outline: 2px solid rgb(31 111 235 / 35%);
+        outline-offset: 2px;
+      }
+
+      .primaryButton,
+      .secondaryButton {
+        width: 100%;
+        min-height: 40px;
+        border: 0;
+        border-radius: 8px;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .primaryButton {
+        margin-top: 10px;
+        background: var(--color-primary);
+        color: #ffffff;
+      }
+
+      .primaryButton:hover {
+        background: var(--color-primary-hover);
+      }
+
+      .secondaryButton {
+        border: 1px solid #d98f3c;
+        background: #ffffff;
+        color: var(--color-warning-text);
+      }
+
+      .statusMessage {
+        min-height: 20px;
+        margin: 10px 0;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .statusMessage:not(:empty) {
+        padding: 8px 10px;
+      }
+
+      .statusMessage--success {
+        background: var(--color-success-bg);
+        color: var(--color-success-text);
+      }
+
+      .statusMessage--error {
+        background: var(--color-error-bg);
+        color: var(--color-error-text);
+      }
+
+      .highlightList {
+        margin-top: 10px;
+        border-top: 1px solid var(--color-border);
+      }
+
+      .emptyState,
+      .loadingState {
+        margin-top: 10px;
+        padding: 18px 12px;
+        border: 1px dashed var(--color-border);
+        border-radius: 10px;
+        background: #f9fbfd;
+        color: var(--color-muted);
+        font-size: 13px;
+        text-align: center;
+      }
+
+      .highlightItem {
+        position: relative;
+        padding: 12px 36px 12px 0;
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+      }
+
+      .highlightItem:hover {
+        background: #f9fbfd;
+      }
+
+      .highlightSnippet {
+        margin-bottom: 5px;
+        color: var(--color-text);
+        font-size: 14px;
+        font-weight: 700;
+        word-break: break-word;
+      }
+
+      .highlightUrl {
+        overflow: hidden;
+        color: var(--color-muted);
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .tagPill {
+        display: inline-block;
+        margin-right: 6px;
+        padding: 2px 6px;
+        border-radius: 999px;
+        background: #e7f0ff;
+        color: #174ea6;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .deleteBtn {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--color-muted);
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .deleteBtn:hover {
+        background: var(--color-error-bg);
+        color: var(--color-error-text);
+      }
+    </style>
+  </head>
+  <body>
+    <h3 id="appName"></h3>
+    <div id="app">...</div>
+    <script type="module" src="/src/popup.ts"></script>
+  </body>
+</html>
