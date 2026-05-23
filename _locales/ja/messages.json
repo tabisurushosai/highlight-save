@@ -13,5 +13,7 @@
   "tagPlaceholder": { "message": "タグ（任意）" },
   "trialRemaining": { "message": "トライアル残り: $DAYS$ 日" },
   "loadingHighlights": { "message": "読み込み中..." },
-  "deleteButton": { "message": "ハイライトを削除" }
+  "deleteButton": { "message": "ハイライトを削除" },
+  "openHighlight": { "message": "取得元ページを開く" },
+  "highlightListLabel": { "message": "保存済みハイライト" }
 }

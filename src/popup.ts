@@ -71,7 +71,7 @@ async function renderHighlights() {
           <div class="trialText">
           ${chrome.i18n.getMessage("trialRemaining", [remainingDays.toString()])}
           </div>
-          <button id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton")}</button>
+          <button type="button" id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton")}</button>
         </div>
       `;
       document.getElementById("upgradeBtn")?.addEventListener("click", async () => {
@@ -91,16 +91,19 @@ async function renderHighlights() {
   }
 
   const deleteLabel = chrome.i18n.getMessage("deleteButton");
+  const openLabel = chrome.i18n.getMessage("openHighlight");
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = item.text.length > 50 ? item.text.substring(0, 50) + "..." : item.text;
     const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
-      <div class="highlightItem" data-url="${escapeHtml(item.url)}">
-        <div class="highlightSnippet">${tagHtml}${escapeHtml(snippet)}</div>
-        <div class="highlightUrl">
-          ${escapeHtml(item.url)}
-        </div>
-        <button class="deleteBtn" data-ts="${item.ts}" aria-label="${escapeHtml(deleteLabel)}" title="${escapeHtml(deleteLabel)}">×</button>
+      <div class="highlightItem" role="listitem">
+        <button type="button" class="highlightOpenBtn" data-url="${escapeHtml(item.url)}" aria-label="${escapeHtml(openLabel)}: ${escapeHtml(snippet)}" title="${escapeHtml(openLabel)}">
+          <span class="highlightSnippet">${tagHtml}${escapeHtml(snippet)}</span>
+          <span class="highlightUrl">
+            ${escapeHtml(item.url)}
+          </span>
+        </button>
+        <button type="button" class="deleteBtn" data-ts="${item.ts}" aria-label="${escapeHtml(deleteLabel)}" title="${escapeHtml(deleteLabel)}">×</button>
       </div>
     `;
   }).join("");
@@ -110,15 +113,15 @@ async function renderHighlights() {
   listContainer.querySelectorAll(".deleteBtn").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      const ts = (e.target as HTMLElement).getAttribute("data-ts");
+      const ts = (e.currentTarget as HTMLElement).getAttribute("data-ts");
       if (ts) {
         await deleteHighlight(Number(ts));
       }
     });
   });
 
-  listContainer.querySelectorAll(".highlightItem").forEach(item => {
-    item.addEventListener("click", (e) => {
+  listContainer.querySelectorAll(".highlightOpenBtn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
       const url = (e.currentTarget as HTMLElement).getAttribute("data-url");
       if (url) {
         chrome.tabs.create({ url });
@@ -189,10 +192,10 @@ if (app) {
     <div class="savePanel">
       <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
       <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
-      <button id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
+      <button type="button" id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
     </div>
     <div id="status" class="statusMessage" role="status" aria-live="polite"></div>
-    <div id="listContainer" class="highlightList" aria-live="polite"></div>
+    <div id="listContainer" class="highlightList" role="list" aria-live="polite" aria-label="${chrome.i18n.getMessage("highlightListLabel")}"></div>
   `;
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
   renderHighlights();
