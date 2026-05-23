@@ -11,5 +11,7 @@
   "upgradeButton": { "message": "Upgrade to Premium ($3)" },
   "isPremium": { "message": "Premium Active" },
   "tagPlaceholder": { "message": "Tag (optional)" },
-  "trialRemaining": { "message": "Trial: $DAYS$ days left" }
+  "trialRemaining": { "message": "Trial: $DAYS$ days left" },
+  "loadingHighlights": { "message": "Loading highlights..." },
+  "deleteButton": { "message": "Delete highlight" }
 }

@@ -5,18 +5,57 @@ interface Highlight {
   tag?: string;
 }
 
+let clearStatusTimer: number | undefined;
+
+function escapeHtml(value: string): string {
+  const entities: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;",
+  };
+
+  return value.replace(/[&<>"']/g, (char) => entities[char]);
+}
+
+function setStatusMessage(message: string, tone: "success" | "error", clearAfterMs?: number) {
+  const status = document.getElementById("status");
+  if (!status) return;
+
+  if (clearStatusTimer) {
+    window.clearTimeout(clearStatusTimer);
+    clearStatusTimer = undefined;
+  }
+
+  status.textContent = message;
+  status.className = `statusMessage statusMessage--${tone}`;
+
+  if (clearAfterMs) {
+    clearStatusTimer = window.setTimeout(() => {
+      status.textContent = "";
+      status.className = "statusMessage";
+      clearStatusTimer = undefined;
+    }, clearAfterMs);
+  }
+}
+
 async function renderHighlights() {
+  const listContainer = document.getElementById("listContainer");
+  if (!listContainer) return;
+
+  listContainer.setAttribute("aria-busy", "true");
+  listContainer.innerHTML = `<div class="loadingState">${chrome.i18n.getMessage("loadingHighlights")}</div>`;
+
   const data = await chrome.storage.local.get(["highlights", "isPremium", "trial_start_ts"]);
   const highlights: Highlight[] = data.highlights || [];
   const isPremium = data.isPremium || false;
-  const listContainer = document.getElementById("listContainer");
-  if (!listContainer) return;
 
   // Render Premium Status
   const premiumInfo = document.getElementById("premiumInfo");
   if (premiumInfo) {
     if (isPremium) {
-      premiumInfo.innerHTML = `<div style="color: #27ae60; font-weight: bold; margin-bottom: 10px;">${chrome.i18n.getMessage("isPremium")}</div>`;
+      premiumInfo.innerHTML = `<div class="premiumBadge">${chrome.i18n.getMessage("isPremium")}</div>`;
     } else {
       const now = Date.now();
       const trialStart = data.trial_start_ts || now;
@@ -28,12 +67,12 @@ async function renderHighlights() {
       const remainingDays = Math.max(0, Math.ceil((sevenDaysMs - elapsed) / (24 * 60 * 60 * 1000)));
       
       premiumInfo.innerHTML = `
-        <div style="font-size: 0.8em; margin-bottom: 5px; color: #666;">
+        <div class="trialCard">
+          <div class="trialText">
           ${chrome.i18n.getMessage("trialRemaining", [remainingDays.toString()])}
+          </div>
+          <button id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton")}</button>
         </div>
-        <button id="upgradeBtn" style="width: 100%; background: #e67e22; color: white; border: none; padding: 6px; cursor: pointer; border-radius: 4px; font-size: 0.85em; margin-bottom: 10px;">
-          ${chrome.i18n.getMessage("upgradeButton")}
-        </button>
       `;
       document.getElementById("upgradeBtn")?.addEventListener("click", async () => {
         if (confirm("Simulate Stripe Purchase ($3)?")) {
@@ -44,21 +83,24 @@ async function renderHighlights() {
     }
   }
 
+  listContainer.removeAttribute("aria-busy");
+
   if (highlights.length === 0) {
-    listContainer.innerHTML = `<p style='color: #666; font-size: 0.9em;'>${chrome.i18n.getMessage("noHighlights")}</p>`;
+    listContainer.innerHTML = `<div class="emptyState">${chrome.i18n.getMessage("noHighlights")}</div>`;
     return;
   }
 
+  const deleteLabel = chrome.i18n.getMessage("deleteButton");
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = item.text.length > 50 ? item.text.substring(0, 50) + "..." : item.text;
-    const tagHtml = item.tag ? `<span style="background: #e1f5fe; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; margin-right: 6px; color: #0277bd;">#${item.tag}</span>` : "";
+    const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
-      <div class="highlightItem" data-url="${item.url}" style="border-bottom: 1px solid #eee; padding: 10px 0; font-size: 0.9em; position: relative; cursor: pointer;">
-        <div style="font-weight: bold; margin-bottom: 4px; word-break: break-all; padding-right: 24px;">${tagHtml}${snippet}</div>
-        <div style="color: #666; font-size: 0.8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 24px;">
-          ${item.url}
+      <div class="highlightItem" data-url="${escapeHtml(item.url)}">
+        <div class="highlightSnippet">${tagHtml}${escapeHtml(snippet)}</div>
+        <div class="highlightUrl">
+          ${escapeHtml(item.url)}
         </div>
-        <button class="deleteBtn" data-ts="${item.ts}" style="position: absolute; top: 10px; right: 0; background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.2em; padding: 0 4px; z-index: 1;">×</button>
+        <button class="deleteBtn" data-ts="${item.ts}" aria-label="${escapeHtml(deleteLabel)}" title="${escapeHtml(deleteLabel)}">×</button>
       </div>
     `;
   }).join("");
@@ -102,11 +144,7 @@ async function saveSelection() {
   const isPremium = data.isPremium || false;
 
   if (!isPremium && highlights.length >= 20) {
-    const status = document.getElementById("status");
-    if (status) {
-      status.style.color = "#c0392b";
-      status.textContent = chrome.i18n.getMessage("premiumRequired");
-    }
+    setStatusMessage(chrome.i18n.getMessage("premiumRequired"), "error");
     return;
   }
 
@@ -129,32 +167,14 @@ async function saveSelection() {
 
       if (tagInput) tagInput.value = "";
 
-      const status = document.getElementById("status");
-      if (status) {
-        status.style.color = "#27ae60";
-        status.textContent = chrome.i18n.getMessage("savedSuccess");
-        setTimeout(() => {
-          if (status) status.textContent = "";
-        }, 2000);
-      }
+      setStatusMessage(chrome.i18n.getMessage("savedSuccess"), "success", 2000);
       renderHighlights();
     } else {
-      const status = document.getElementById("status");
-      if (status) {
-        status.style.color = "#c0392b";
-        status.textContent = chrome.i18n.getMessage("noSelectionError");
-        setTimeout(() => {
-          if (status) status.textContent = "";
-        }, 2000);
-      }
+      setStatusMessage(chrome.i18n.getMessage("noSelectionError"), "error", 2000);
     }
   } catch (err) {
     console.error("Failed to execute script:", err);
-    const status = document.getElementById("status");
-    if (status) {
-      status.style.color = "#c0392b";
-      status.textContent = chrome.i18n.getMessage("genericError");
-    }
+    setStatusMessage(chrome.i18n.getMessage("genericError"), "error");
   }
 }
 
@@ -165,11 +185,12 @@ if (appName) {
 }
 if (app) {
   app.innerHTML = `
-    <div id="premiumInfo"></div>
-    <input type="text" id="tagInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}" style="width: 100%; padding: 8px; margin-bottom: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-    <button id="saveBtn" style="width: 100%; padding: 10px; cursor: pointer; background: #3498db; color: white; border: none; border-radius: 4px; font-weight: bold;">${chrome.i18n.getMessage("saveButton")}</button>
-    <div id="status" style="margin: 10px 0; font-size: 0.85em; height: 1.2em; text-align: center;"></div>
-    <div id="listContainer" style="margin-top: 10px; border-top: 1px solid #eee;"></div>
+    <div id="premiumInfo" class="premiumArea"></div>
+    <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
+    <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
+    <button id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
+    <div id="status" class="statusMessage" role="status" aria-live="polite"></div>
+    <div id="listContainer" class="highlightList" aria-live="polite"></div>
   `;
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
   renderHighlights();
