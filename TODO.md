@@ -1,7 +1,7 @@
 # highlight-save TODO (細粒度)
 - [x] T001: src/content.ts で現在の選択テキスト(window.getSelection)を取得して返す関数を実装するだけ
 - [x] T002: src/popup.ts で「選択を保存」→scripting.executeScriptで選択取得→{text,url,ts}をstorage.localの配列に保存
-- [ ] T003: 保存一覧をpopup表示(本文先頭+取得元URL)
+- [x] T003: 保存一覧をpopup表示(本文先頭+取得元URL)
 - [ ] T004: 各項目の削除ボタン
 - [ ] T005: content.tsで保存時に選択箇所を<mark>でハイライト
 - [ ] T006: 項目クリックで取得元URLを新規タブで開く
