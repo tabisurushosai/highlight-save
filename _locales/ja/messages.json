@@ -6,5 +6,10 @@
   "saveButton": { "message": "選択を保存" },
   "savedSuccess": { "message": "保存しました！" },
   "noSelectionError": { "message": "選択範囲が見つかりません" },
-  "genericError": { "message": "エラーが発生しました" }
+  "genericError": { "message": "エラーが発生しました" },
+  "premiumRequired": { "message": "無料枠の上限（20件）です。保存するにはPremiumへアップグレードしてください。" },
+  "upgradeButton": { "message": "Premiumへアップグレード ($3)" },
+  "isPremium": { "message": "Premium 適用中" },
+  "tagPlaceholder": { "message": "タグ（任意）" },
+  "trialRemaining": { "message": "トライアル残り: $DAYS$ 日" }
 }

@@ -6,5 +6,10 @@
   "saveButton": { "message": "Save Selection" },
   "savedSuccess": { "message": "Saved!" },
   "noSelectionError": { "message": "No selection found" },
-  "genericError": { "message": "An error occurred" }
+  "genericError": { "message": "An error occurred" },
+  "premiumRequired": { "message": "Free limit reached (20 items). Please upgrade to Premium." },
+  "upgradeButton": { "message": "Upgrade to Premium ($3)" },
+  "isPremium": { "message": "Premium Active" },
+  "tagPlaceholder": { "message": "Tag (optional)" },
+  "trialRemaining": { "message": "Trial: $DAYS$ days left" }
 }
