@@ -12,16 +12,35 @@ async function renderHighlights() {
   const listHtml = [...highlights].reverse().map((item: any) => {
     const snippet = item.text.length > 50 ? item.text.substring(0, 50) + "..." : item.text;
     return `
-      <div style="border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.9em;">
-        <div style="font-weight: bold; margin-bottom: 4px; word-break: break-all;">${snippet}</div>
-        <div style="color: #666; font-size: 0.8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+      <div style="border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.9em; position: relative;">
+        <div style="font-weight: bold; margin-bottom: 4px; word-break: break-all; padding-right: 24px;">${snippet}</div>
+        <div style="color: #666; font-size: 0.8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 24px;">
           ${item.url}
         </div>
+        <button class="deleteBtn" data-ts="${item.ts}" style="position: absolute; top: 8px; right: 0; background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.2em; padding: 0 4px;">×</button>
       </div>
     `;
   }).join("");
 
   listContainer.innerHTML = listHtml;
+
+  // Add event listeners for delete buttons
+  listContainer.querySelectorAll(".deleteBtn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const ts = (e.target as HTMLElement).getAttribute("data-ts");
+      if (ts) {
+        await deleteHighlight(Number(ts));
+      }
+    });
+  });
+}
+
+async function deleteHighlight(ts: number) {
+  const data = await chrome.storage.local.get("highlights");
+  let highlights = data.highlights || [];
+  highlights = highlights.filter((item: any) => item.ts !== ts);
+  await chrome.storage.local.set({ highlights });
+  renderHighlights();
 }
 
 async function saveSelection() {
