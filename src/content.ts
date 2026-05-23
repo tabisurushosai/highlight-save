@@ -1,18 +1,13 @@
-interface Highlight {
-  text: string;
-  url: string;
-  ts: number;
-  tag?: string;
-}
+import type { Highlight } from "./core/highlights";
+import { contentChromeHighlightStorage } from "./storage/contentChromeStorage";
 
 /**
  * 保存されたハイライトを現在のページに適用する
  */
 async function restoreHighlights() {
   const url = window.location.href;
-  const data = await chrome.storage.local.get("highlights");
-  const highlights: Highlight[] = data.highlights || [];
-  const pageHighlights = highlights.filter((item: Highlight) => item.url === url);
+  const data = await contentChromeHighlightStorage.load();
+  const pageHighlights = data.highlights.filter((item: Highlight) => item.url === url);
 
   pageHighlights.forEach((item: Highlight) => {
     applyHighlight(item.text);

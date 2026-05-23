@@ -1,9 +1,13 @@
-interface Highlight {
-  text: string;
-  url: string;
-  ts: number;
-  tag?: string;
-}
+import {
+  appendHighlight,
+  canSaveHighlight,
+  createHighlight,
+  deleteHighlightByTimestamp,
+  getHighlightSnippet,
+  getRemainingTrialDays,
+  type Highlight,
+} from "./core/highlights";
+import { chromeHighlightStorage } from "./storage/chromeStorage";
 
 let clearStatusTimer: number | undefined;
 
@@ -47,9 +51,9 @@ async function renderHighlights() {
   listContainer.setAttribute("aria-busy", "true");
   listContainer.innerHTML = `<div class="loadingState">${chrome.i18n.getMessage("loadingHighlights")}</div>`;
 
-  const data = await chrome.storage.local.get(["highlights", "isPremium", "trial_start_ts"]);
-  const highlights: Highlight[] = data.highlights || [];
-  const isPremium = data.isPremium || false;
+  const data = await chromeHighlightStorage.load();
+  const highlights = data.highlights;
+  const isPremium = data.isPremium;
 
   // Render Premium Status
   const premiumInfo = document.getElementById("premiumInfo");
@@ -58,13 +62,11 @@ async function renderHighlights() {
       premiumInfo.innerHTML = `<div class="premiumBadge">${chrome.i18n.getMessage("isPremium")}</div>`;
     } else {
       const now = Date.now();
-      const trialStart = data.trial_start_ts || now;
-      if (!data.trial_start_ts) {
-        await chrome.storage.local.set({ trial_start_ts: now });
+      const trialStart = data.trialStartTs || now;
+      if (!data.trialStartTs) {
+        await chromeHighlightStorage.saveTrialStartTs(now);
       }
-      const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-      const elapsed = now - trialStart;
-      const remainingDays = Math.max(0, Math.ceil((sevenDaysMs - elapsed) / (24 * 60 * 60 * 1000)));
+      const remainingDays = getRemainingTrialDays(trialStart, now);
       
       premiumInfo.innerHTML = `
         <div class="trialCard">
@@ -76,7 +78,7 @@ async function renderHighlights() {
       `;
       document.getElementById("upgradeBtn")?.addEventListener("click", async () => {
         if (confirm("Simulate Stripe Purchase ($3)?")) {
-          await chrome.storage.local.set({ isPremium: true });
+          await chromeHighlightStorage.savePremium(true);
           renderHighlights();
         }
       });
@@ -93,7 +95,7 @@ async function renderHighlights() {
   const deleteLabel = chrome.i18n.getMessage("deleteButton");
   const openLabel = chrome.i18n.getMessage("openHighlight");
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
-    const snippet = item.text.length > 50 ? item.text.substring(0, 50) + "..." : item.text;
+    const snippet = getHighlightSnippet(item.text);
     const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
       <div class="highlightItem" role="listitem">
@@ -131,10 +133,10 @@ async function renderHighlights() {
 }
 
 async function deleteHighlight(ts: number) {
-  const data = await chrome.storage.local.get("highlights");
-  let highlights: Highlight[] = data.highlights || [];
-  highlights = highlights.filter((item: Highlight) => item.ts !== ts);
-  await chrome.storage.local.set({ highlights });
+  const data = await chromeHighlightStorage.load();
+  const highlights = deleteHighlightByTimestamp(data.highlights, ts);
+
+  await chromeHighlightStorage.saveHighlights(highlights);
   renderHighlights();
 }
 
@@ -142,11 +144,11 @@ async function saveSelection() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return;
 
-  const data = await chrome.storage.local.get(["highlights", "isPremium"]);
-  const highlights: Highlight[] = data.highlights || [];
-  const isPremium = data.isPremium || false;
+  const data = await chromeHighlightStorage.load();
+  const highlights = data.highlights;
+  const isPremium = data.isPremium;
 
-  if (!isPremium && highlights.length >= 20) {
+  if (!canSaveHighlight(highlights, isPremium)) {
     setStatusMessage(chrome.i18n.getMessage("premiumRequired"), "error");
     return;
   }
@@ -163,10 +165,9 @@ async function saveSelection() {
       const ts = Date.now();
       const tagInput = document.getElementById("tagInput") as HTMLInputElement;
       const tag = tagInput?.value.trim() || "";
-      const newItem = { text, url, ts, tag };
+      const newItem = createHighlight({ text, url, ts, tag });
 
-      highlights.push(newItem);
-      await chrome.storage.local.set({ highlights });
+      await chromeHighlightStorage.saveHighlights(appendHighlight(highlights, newItem));
 
       if (tagInput) tagInput.value = "";
 
