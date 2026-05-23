@@ -4,7 +4,7 @@
 - [x] T003: 保存一覧をpopup表示(本文先頭+取得元URL)
 - [x] T004: 各項目の削除ボタン
 - [x] T005: content.tsで保存時に選択箇所を<mark>でハイライト
-- [ ] T006: 項目クリックで取得元URLを新規タブで開く
+- [x] T006: 項目クリックで取得元URLを新規タブで開く
 - [ ] T007: 起動時にstorage.localから一覧復元
 - [ ] T008: _locales ja/en を chrome.i18n で全UIに適用
 - [ ] T009: Premiumゲート(trial_start_ts+Stripe)。無料は20件まで、Premiumで無制限+タグ分類
