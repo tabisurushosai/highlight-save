@@ -1,1 +1,10 @@
-{ "extName":{"message":"Pick & Save"},"extDesc":{"message":"Highlight and save selected text to review later."} }
+{
+  "extName": { "message": "Pick & Save" },
+  "extDesc": { "message": "Highlight and save selected text to review later." },
+  "appName": { "message": "Pick & Save" },
+  "noHighlights": { "message": "No highlights saved" },
+  "saveButton": { "message": "Save Selection" },
+  "savedSuccess": { "message": "Saved!" },
+  "noSelectionError": { "message": "No selection found" },
+  "genericError": { "message": "An error occurred" }
+}

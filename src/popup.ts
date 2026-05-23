@@ -5,7 +5,7 @@ async function renderHighlights() {
   if (!listContainer) return;
 
   if (highlights.length === 0) {
-    listContainer.innerHTML = "<p style='color: #666; font-size: 0.9em;'>保存されたハイライトはありません</p>";
+    listContainer.innerHTML = `<p style='color: #666; font-size: 0.9em;'>${chrome.i18n.getMessage("noHighlights")}</p>`;
     return;
   }
 
@@ -77,7 +77,7 @@ async function saveSelection() {
 
       const status = document.getElementById("status");
       if (status) {
-        status.textContent = "保存しました！";
+        status.textContent = chrome.i18n.getMessage("savedSuccess");
         setTimeout(() => {
           if (status) status.textContent = "";
         }, 2000);
@@ -86,7 +86,7 @@ async function saveSelection() {
     } else {
       const status = document.getElementById("status");
       if (status) {
-        status.textContent = "選択範囲が見つかりません";
+        status.textContent = chrome.i18n.getMessage("noSelectionError");
         setTimeout(() => {
           if (status) status.textContent = "";
         }, 2000);
@@ -96,15 +96,19 @@ async function saveSelection() {
     console.error("Failed to execute script:", err);
     const status = document.getElementById("status");
     if (status) {
-      status.textContent = "エラーが発生しました";
+      status.textContent = chrome.i18n.getMessage("genericError");
     }
   }
 }
 
 const app = document.getElementById("app");
+const appName = document.getElementById("appName");
+if (appName) {
+  appName.textContent = chrome.i18n.getMessage("appName");
+}
 if (app) {
   app.innerHTML = `
-    <button id="saveBtn" style="width: 100%; padding: 8px; cursor: pointer;">選択を保存</button>
+    <button id="saveBtn" style="width: 100%; padding: 8px; cursor: pointer;">${chrome.i18n.getMessage("saveButton")}</button>
     <div id="status" style="margin: 10px 0; font-size: 0.8em; height: 1.2em;"></div>
     <div id="listContainer" style="margin-top: 10px; border-top: 1px solid #ccc;"></div>
   `;

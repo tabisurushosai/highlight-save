@@ -6,7 +6,7 @@
 - [x] T005: content.tsで保存時に選択箇所を<mark>でハイライト
 - [x] T006: 項目クリックで取得元URLを新規タブで開く
 - [x] T007: 起動時にstorage.localから一覧復元
-- [ ] T008: _locales ja/en を chrome.i18n で全UIに適用
+- [x] T008: _locales ja/en を chrome.i18n で全UIに適用
 - [ ] T009: Premiumゲート(trial_start_ts+Stripe)。無料は20件まで、Premiumで無制限+タグ分類
 - [ ] T010: npm run build を通しts/lintを解消
 - [ ] T011: release/highlight-save.zip 生成(node_modules除外)

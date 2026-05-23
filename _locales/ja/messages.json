@@ -1,1 +1,10 @@
-{ "extName":{"message":"えらんで保存"},"extDesc":{"message":"ページで選んだ文章をハイライトして保存。あとでまとめて見返せます。調べもの・学習に。"} }
+{
+  "extName": { "message": "えらんで保存" },
+  "extDesc": { "message": "ページで選んだ文章をハイライトして保存。あとでまとめて見返せます。調べもの・学習に。" },
+  "appName": { "message": "えらんで保存" },
+  "noHighlights": { "message": "保存されたハイライトはありません" },
+  "saveButton": { "message": "選択を保存" },
+  "savedSuccess": { "message": "保存しました！" },
+  "noSelectionError": { "message": "選択範囲が見つかりません" },
+  "genericError": { "message": "エラーが発生しました" }
+}
