@@ -3,12 +3,14 @@ import {
   canSaveHighlight,
   createHighlight,
   deleteHighlightByTimestamp,
+  FREE_HIGHLIGHT_LIMIT,
   getHighlightSnippet,
   getRemainingTrialDays,
   type Highlight,
 } from "./core/highlights";
 import { chromeHighlightStorage } from "./storage/chromeStorage";
 
+const PREMIUM_PRICE_USD = 3;
 let clearStatusTimer: number | undefined;
 
 function escapeHtml(value: string): string {
@@ -21,6 +23,28 @@ function escapeHtml(value: string): string {
   };
 
   return value.replace(/[&<>"']/g, (char) => entities[char]);
+}
+
+function getUiLocale(): string | undefined {
+  return chrome.i18n.getUILanguage() || undefined;
+}
+
+function formatNumber(value: number): string {
+  return new Intl.NumberFormat(getUiLocale()).format(value);
+}
+
+function formatPremiumPrice(): string {
+  return new Intl.NumberFormat(getUiLocale(), {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(PREMIUM_PRICE_USD);
+}
+
+function getTrialRemainingMessage(remainingDays: number): string {
+  const messageName = remainingDays === 1 ? "trialRemainingOne" : "trialRemainingOther";
+  return chrome.i18n.getMessage(messageName, [formatNumber(remainingDays)]);
 }
 
 function setStatusMessage(message: string, tone: "success" | "error", clearAfterMs?: number) {
@@ -67,17 +91,18 @@ async function renderHighlights() {
         await chromeHighlightStorage.saveTrialStartTs(now);
       }
       const remainingDays = getRemainingTrialDays(trialStart, now);
-      
+      const premiumPrice = formatPremiumPrice();
+
       premiumInfo.innerHTML = `
         <div class="trialCard">
           <div class="trialText">
-          ${chrome.i18n.getMessage("trialRemaining", [remainingDays.toString()])}
+          ${getTrialRemainingMessage(remainingDays)}
           </div>
-          <button type="button" id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton")}</button>
+          <button type="button" id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton", [premiumPrice])}</button>
         </div>
       `;
       document.getElementById("upgradeBtn")?.addEventListener("click", async () => {
-        if (confirm("Simulate Stripe Purchase ($3)?")) {
+        if (confirm(chrome.i18n.getMessage("purchaseConfirm", [premiumPrice]))) {
           await chromeHighlightStorage.savePremium(true);
           renderHighlights();
         }
@@ -149,7 +174,7 @@ async function saveSelection() {
   const isPremium = data.isPremium;
 
   if (!canSaveHighlight(highlights, isPremium)) {
-    setStatusMessage(chrome.i18n.getMessage("premiumRequired"), "error");
+    setStatusMessage(chrome.i18n.getMessage("premiumRequired", [formatNumber(FREE_HIGHLIGHT_LIMIT)]), "error");
     return;
   }
 

@@ -3,15 +3,42 @@
   "extDesc": { "message": "Highlight and save selected text to review later." },
   "appName": { "message": "Pick & Save" },
   "noHighlights": { "message": "No highlights saved" },
-  "saveButton": { "message": "Save Selection" },
+  "saveButton": { "message": "Save selection" },
   "savedSuccess": { "message": "Saved!" },
-  "noSelectionError": { "message": "No selection found" },
-  "genericError": { "message": "An error occurred" },
-  "premiumRequired": { "message": "Free limit reached (20 items). Please upgrade to Premium." },
-  "upgradeButton": { "message": "Upgrade to Premium ($3)" },
-  "isPremium": { "message": "Premium Active" },
+  "noSelectionError": { "message": "No selected text found" },
+  "genericError": { "message": "Something went wrong" },
+  "premiumRequired": {
+    "message": "You have reached the free limit ($LIMIT$ items). Please upgrade to Premium to keep saving.",
+    "placeholders": {
+      "limit": { "content": "$1" }
+    }
+  },
+  "upgradeButton": {
+    "message": "Upgrade to Premium ($PRICE$)",
+    "placeholders": {
+      "price": { "content": "$1" }
+    }
+  },
+  "isPremium": { "message": "Premium active" },
   "tagPlaceholder": { "message": "Tag (optional)" },
-  "trialRemaining": { "message": "Trial: $DAYS$ days left" },
+  "trialRemainingOne": {
+    "message": "Trial: $DAYS$ day left",
+    "placeholders": {
+      "days": { "content": "$1" }
+    }
+  },
+  "trialRemainingOther": {
+    "message": "Trial: $DAYS$ days left",
+    "placeholders": {
+      "days": { "content": "$1" }
+    }
+  },
+  "purchaseConfirm": {
+    "message": "Simulate Premium purchase ($PRICE$)?",
+    "placeholders": {
+      "price": { "content": "$1" }
+    }
+  },
   "loadingHighlights": { "message": "Loading highlights..." },
   "deleteButton": { "message": "Delete highlight" },
   "openHighlight": { "message": "Open source page" },
