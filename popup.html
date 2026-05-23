@@ -5,19 +5,22 @@
     <style>
       :root {
         color-scheme: light;
-        --color-bg: #f6f8fb;
+        --color-bg: #f3f6fa;
         --color-surface: #ffffff;
+        --color-surface-soft: #f8fafc;
         --color-text: #17202a;
-        --color-muted: #5f6b7a;
-        --color-border: #dce3ea;
+        --color-muted: #526170;
+        --color-border: #d6dee8;
         --color-primary: #1f6feb;
         --color-primary-hover: #185abc;
+        --color-primary-soft: #e8f1ff;
         --color-success-bg: #e8f5ed;
-        --color-success-text: #146c43;
+        --color-success-text: #0f5f39;
         --color-error-bg: #fdecec;
-        --color-error-text: #9f1d1d;
+        --color-error-text: #8f1717;
         --color-warning-bg: #fff7ed;
-        --color-warning-text: #7a3f00;
+        --color-warning-text: #713900;
+        --shadow-card: 0 10px 24px rgb(16 24 40 / 10%);
       }
 
       * {
@@ -25,9 +28,9 @@
       }
 
       body {
-        width: 340px;
+        width: 360px;
         margin: 0;
-        padding: 16px;
+        padding: 18px;
         background: var(--color-bg);
         color: var(--color-text);
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -36,30 +39,34 @@
       }
 
       #appName {
-        margin: 0 0 12px;
+        margin: 0 0 14px;
         color: var(--color-text);
-        font-size: 18px;
+        font-size: 19px;
         font-weight: 700;
         letter-spacing: 0.01em;
       }
 
       #app {
-        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
         border: 1px solid var(--color-border);
-        border-radius: 12px;
+        border-radius: 14px;
         background: var(--color-surface);
-        box-shadow: 0 6px 18px rgb(16 24 40 / 8%);
+        box-shadow: var(--shadow-card);
       }
 
       .premiumArea {
-        margin-bottom: 12px;
+        margin-bottom: 0;
       }
 
       .premiumBadge,
       .trialCard {
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 10px 12px;
         font-size: 13px;
+        line-height: 1.45;
       }
 
       .premiumBadge {
@@ -80,23 +87,34 @@
         font-weight: 600;
       }
 
+      .savePanel {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
       .fieldLabel {
         display: block;
-        margin-bottom: 6px;
+        margin-bottom: 0;
         color: var(--color-muted);
         font-size: 12px;
         font-weight: 700;
+        letter-spacing: 0.02em;
       }
 
       .textInput {
         width: 100%;
-        min-height: 38px;
-        padding: 8px 10px;
+        min-height: 40px;
+        padding: 9px 11px;
         border: 1px solid var(--color-border);
-        border-radius: 8px;
+        border-radius: 10px;
         background: #ffffff;
         color: var(--color-text);
         font: inherit;
+      }
+
+      .textInput::placeholder {
+        color: #7b8794;
       }
 
       .textInput:focus,
@@ -105,6 +123,11 @@
       .deleteBtn:focus {
         outline: 2px solid rgb(31 111 235 / 35%);
         outline-offset: 2px;
+      }
+
+      .textInput:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgb(31 111 235 / 10%);
       }
 
       .primaryButton,
@@ -119,7 +142,6 @@
       }
 
       .primaryButton {
-        margin-top: 10px;
         background: var(--color-primary);
         color: #ffffff;
       }
@@ -135,16 +157,20 @@
       }
 
       .statusMessage {
-        min-height: 20px;
-        margin: 10px 0;
-        border-radius: 8px;
+        min-height: 0;
+        margin: 0;
+        border-radius: 10px;
         font-size: 13px;
         font-weight: 700;
-        text-align: center;
+        line-height: 1.45;
       }
 
       .statusMessage:not(:empty) {
-        padding: 8px 10px;
+        padding: 9px 11px;
+      }
+
+      .statusMessage:empty {
+        display: none;
       }
 
       .statusMessage--success {
@@ -158,38 +184,51 @@
       }
 
       .highlightList {
-        margin-top: 10px;
-        border-top: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 2px;
       }
 
       .emptyState,
       .loadingState {
-        margin-top: 10px;
-        padding: 18px 12px;
+        padding: 20px 14px;
         border: 1px dashed var(--color-border);
-        border-radius: 10px;
-        background: #f9fbfd;
+        border-radius: 12px;
+        background: var(--color-surface-soft);
         color: var(--color-muted);
         font-size: 13px;
+        font-weight: 600;
+        line-height: 1.55;
         text-align: center;
+      }
+
+      .loadingState {
+        border-style: solid;
+        background: var(--color-primary-soft);
+        color: #174ea6;
       }
 
       .highlightItem {
         position: relative;
-        padding: 12px 36px 12px 0;
-        border-bottom: 1px solid var(--color-border);
+        padding: 12px 42px 12px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        background: var(--color-surface);
         cursor: pointer;
       }
 
       .highlightItem:hover {
-        background: #f9fbfd;
+        border-color: #b7c9dd;
+        background: var(--color-surface-soft);
       }
 
       .highlightSnippet {
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         color: var(--color-text);
         font-size: 14px;
         font-weight: 700;
+        line-height: 1.45;
         word-break: break-word;
       }
 
@@ -215,7 +254,7 @@
       .deleteBtn {
         position: absolute;
         top: 10px;
-        right: 0;
+        right: 10px;
         width: 28px;
         height: 28px;
         border: 0;

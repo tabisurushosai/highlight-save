@@ -186,9 +186,11 @@ if (appName) {
 if (app) {
   app.innerHTML = `
     <div id="premiumInfo" class="premiumArea"></div>
-    <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
-    <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
-    <button id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
+    <div class="savePanel">
+      <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
+      <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
+      <button id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
+    </div>
     <div id="status" class="statusMessage" role="status" aria-live="polite"></div>
     <div id="listContainer" class="highlightList" aria-live="polite"></div>
   `;
