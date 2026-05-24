@@ -11,7 +11,7 @@
         --color-surface-soft: #f8fafc;
         --color-text: #0f172a;
         --color-muted: #334155;
-        --color-subtle: #64748b;
+        --color-subtle: #475569;
         --color-border: #b8c5d5;
         --color-border-soft: #e2e8f0;
         --color-primary: #1557b0;
@@ -126,6 +126,18 @@
         letter-spacing: 0.02em;
       }
 
+      .visuallyHidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+        padding: 0;
+      }
+
       .textInput {
         width: 100%;
         min-height: 48px;
@@ -188,7 +200,7 @@
         border: 1px solid #d98f3c;
         background: #ffffff;
         color: var(--color-warning-text);
-        min-height: 44px;
+        min-height: 48px;
       }
 
       .secondaryButton:hover {
@@ -379,7 +391,7 @@
         display: block;
         width: 100%;
         min-height: 56px;
-        padding: 15px 62px 15px 15px;
+        padding: 15px 68px 15px 15px;
         border: 1px solid var(--color-border);
         border-radius: 14px;
         background: var(--color-surface);
@@ -437,15 +449,15 @@
 
       .deleteBtn {
         position: absolute;
-        top: 9px;
-        right: 9px;
+        top: 8px;
+        right: 8px;
         z-index: 1;
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         border: 1px solid var(--color-border-soft);
         border-radius: 999px;
         background: #ffffff;
-        color: var(--color-subtle);
+        color: #475569;
         cursor: pointer;
         font-size: 20px;
         font-weight: 700;
@@ -457,6 +469,17 @@
         border-color: #f3b8b8;
         background: var(--color-error-bg);
         color: var(--color-error-text);
+      }
+
+      @media (forced-colors: active) {
+        .textInput:focus-visible,
+        .primaryButton:focus-visible,
+        .secondaryButton:focus-visible,
+        .highlightOpenBtn:focus-visible,
+        .deleteBtn:focus-visible {
+          outline: 3px solid Highlight;
+          box-shadow: none;
+        }
       }
     </style>
   </head>

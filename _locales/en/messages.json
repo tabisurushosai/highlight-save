@@ -33,6 +33,7 @@
   },
   "isPremium": { "message": "Premium active" },
   "tagPlaceholder": { "message": "Tag (optional)" },
+  "tagInputHelp": { "message": "Optionally enter a short tag for the highlight you save." },
   "trialRemainingOne": {
     "message": "Trial ends in $DAYS$ day",
     "placeholders": {
@@ -55,6 +56,7 @@
   "deleteButton": { "message": "Delete this highlight" },
   "openHighlight": { "message": "Open source page" },
   "highlightListLabel": { "message": "Saved highlights" },
+  "listInteractionHint": { "message": "Focus a highlight button and press Enter or Space to open the source page. Use the delete button to remove a highlight." },
   "savedAt": {
     "message": "Saved: $DATETIME$",
     "placeholders": {
