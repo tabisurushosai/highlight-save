@@ -5,7 +5,7 @@ export const HIGHLIGHTS_KEY = "highlights";
 export const IS_PREMIUM_KEY = "isPremium";
 export const TRIAL_START_TS_KEY = "trial_start_ts";
 
-const HIGHLIGHT_STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY];
+const HIGHLIGHT_STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const;
 
 interface HighlightStorageRawData {
   highlights?: unknown;
