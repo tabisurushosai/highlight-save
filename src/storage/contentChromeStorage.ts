@@ -19,11 +19,11 @@ interface ChromeStorageData {
 
 function createContentChromeStorageBackend(storageArea: chrome.storage.StorageArea): HighlightStorageBackend {
   return {
-    async get(keys: readonly string[]): Promise<HighlightStorageItems> {
+    async read(keys: readonly string[]): Promise<HighlightStorageItems> {
       return storageArea.get([...keys]);
     },
 
-    async set(items: HighlightStorageItems): Promise<void> {
+    async write(items: HighlightStorageItems): Promise<void> {
       await storageArea.set(items);
     },
   };
@@ -51,19 +51,19 @@ export function createContentChromeHighlightStorage(
 
   return {
     async load(): Promise<HighlightStorageState> {
-      return toHighlightStorageState(await storageBackend.get([...STORAGE_KEYS]));
+      return toHighlightStorageState(await storageBackend.read([...STORAGE_KEYS]));
     },
 
     async saveHighlights(highlights: Highlight[]): Promise<void> {
-      await storageBackend.set({ [HIGHLIGHTS_KEY]: highlights });
+      await storageBackend.write({ [HIGHLIGHTS_KEY]: highlights });
     },
 
     async savePremium(isPremium: boolean): Promise<void> {
-      await storageBackend.set({ [IS_PREMIUM_KEY]: isPremium });
+      await storageBackend.write({ [IS_PREMIUM_KEY]: isPremium });
     },
 
     async saveTrialStartTs(trialStartTs: number): Promise<void> {
-      await storageBackend.set({ [TRIAL_START_TS_KEY]: trialStartTs });
+      await storageBackend.write({ [TRIAL_START_TS_KEY]: trialStartTs });
     },
   };
 }
