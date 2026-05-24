@@ -7,12 +7,6 @@ export const TRIAL_START_TS_KEY = "trial_start_ts";
 
 const HIGHLIGHT_STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const;
 
-interface HighlightStorageRawData {
-  highlights?: unknown;
-  isPremium?: unknown;
-  trial_start_ts?: unknown;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -34,11 +28,11 @@ export function getHighlightStorageKeys(): string[] {
 }
 
 export function toHighlightStorageState(value: unknown): HighlightStorageState {
-  const data = isRecord(value) ? (value as HighlightStorageRawData) : {};
+  const data = isRecord(value) ? value : {};
 
   return {
-    highlights: toHighlightList(data.highlights),
-    isPremium: toPremiumFlag(data.isPremium),
-    trialStartTs: toTrialStartTs(data.trial_start_ts),
+    highlights: toHighlightList(data[HIGHLIGHTS_KEY]),
+    isPremium: toPremiumFlag(data[IS_PREMIUM_KEY]),
+    trialStartTs: toTrialStartTs(data[TRIAL_START_TS_KEY]),
   };
 }
