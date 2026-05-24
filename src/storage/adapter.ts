@@ -11,20 +11,20 @@ import type { HighlightStorageAdapter, HighlightStorageBackend } from "./types";
 export function createHighlightStorageAdapter(storageBackend: HighlightStorageBackend): HighlightStorageAdapter {
   return {
     async load() {
-      const data = await storageBackend.get(getHighlightStorageKeys());
+      const data = await storageBackend.read(getHighlightStorageKeys());
       return toHighlightStorageState(data);
     },
 
     async saveHighlights(highlights: Highlight[]): Promise<void> {
-      await storageBackend.set({ [HIGHLIGHTS_KEY]: highlights });
+      await storageBackend.write({ [HIGHLIGHTS_KEY]: highlights });
     },
 
     async savePremium(isPremium: boolean): Promise<void> {
-      await storageBackend.set({ [IS_PREMIUM_KEY]: isPremium });
+      await storageBackend.write({ [IS_PREMIUM_KEY]: isPremium });
     },
 
     async saveTrialStartTs(trialStartTs: number): Promise<void> {
-      await storageBackend.set({ [TRIAL_START_TS_KEY]: trialStartTs });
+      await storageBackend.write({ [TRIAL_START_TS_KEY]: trialStartTs });
     },
   };
 }
