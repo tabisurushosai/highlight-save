@@ -8,8 +8,8 @@ export interface HighlightStorageState {
 
 export type HighlightStorageItems = Record<string, unknown>;
 
-export interface HighlightKeyValueStorage {
-  get(keys: string[]): Promise<HighlightStorageItems>;
+export interface HighlightStorageBackend {
+  get(keys: readonly string[]): Promise<HighlightStorageItems>;
   set(items: HighlightStorageItems): Promise<void>;
 }
 
