@@ -8,6 +8,12 @@ import {
   getRemainingTrialDays,
   type Highlight,
 } from "./core/highlights";
+import {
+  formatLocalizedCurrency,
+  formatLocalizedDateTime,
+  formatLocalizedNumber,
+  normalizeLocale,
+} from "./core/format";
 import { chromeHighlightStorage } from "./storage/chromeStorage";
 
 const PREMIUM_PRICE_USD = 3;
@@ -27,24 +33,19 @@ function escapeHtml(value: string): string {
 }
 
 function getUiLocale(): string | undefined {
-  return chrome.i18n.getUILanguage() || undefined;
+  return normalizeLocale(chrome.i18n.getUILanguage()) || undefined;
 }
 
 function getDocumentLanguage(): string {
-  return getUiLocale()?.replace("_", "-") || "ja";
+  return getUiLocale() || "ja";
 }
 
 function formatNumber(value: number): string {
-  return new Intl.NumberFormat(getUiLocale()).format(value);
+  return formatLocalizedNumber(value, getUiLocale());
 }
 
 function formatPremiumPrice(): string {
-  return new Intl.NumberFormat(getUiLocale(), {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(PREMIUM_PRICE_USD);
+  return formatLocalizedCurrency(PREMIUM_PRICE_USD, "USD", getUiLocale());
 }
 
 function getTrialRemainingMessage(remainingDays: number): string {
@@ -84,6 +85,11 @@ function setSaveButtonPending(isPending: boolean) {
 function getSavedCountMessage(count: number): string {
   const messageName = count === 1 ? "savedCountOne" : "savedCountOther";
   return chrome.i18n.getMessage(messageName, [formatNumber(count)]);
+}
+
+function getSavedAtMessage(timestamp: number): string {
+  const savedAt = formatLocalizedDateTime(timestamp, getUiLocale());
+  return chrome.i18n.getMessage("savedAt", [savedAt]);
 }
 
 function renderEmptyState(listContainer: HTMLElement) {
@@ -163,11 +169,13 @@ async function renderHighlights() {
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = getHighlightSnippet(item.text);
     const deleteAccessibleLabel = `${deleteLabel}: ${snippet}`;
+    const savedAt = getSavedAtMessage(item.ts);
     const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
       <div class="highlightItem" role="listitem">
         <button type="button" class="highlightOpenBtn" data-url="${escapeHtml(item.url)}" aria-label="${escapeHtml(openLabel)}: ${escapeHtml(snippet)}" title="${escapeHtml(openLabel)}">
           <span class="highlightSnippet">${tagHtml}${escapeHtml(snippet)}</span>
+          <span class="highlightSavedAt">${escapeHtml(savedAt)}</span>
           <span class="highlightUrl">
             ${escapeHtml(item.url)}
           </span>

@@ -1,12 +1,12 @@
 {
   "extName": { "message": "Pick & Save" },
-  "extDesc": { "message": "Highlight and save selected text to review later." },
+  "extDesc": { "message": "Highlight and save selected text on a page, then review it later in one place." },
   "appName": { "message": "Pick & Save" },
   "noHighlights": { "message": "No highlights saved" },
   "emptyStateTitle": { "message": "No highlights saved yet" },
   "emptyStateDescription": { "message": "Select text on a page to save it here and review it later." },
   "emptyStateStepSelect": { "message": "Go back to the page and drag to select text you want to keep" },
-  "emptyStateStepSave": { "message": "Open this popup again and press \"Save selection\"" },
+  "emptyStateStepSave": { "message": "Open this popup again and choose \"Save selection\"" },
   "emptyStateStepReview": { "message": "After saving, open the source page from this list" },
   "emptyStateNextAction": { "message": "Close this popup first, then select text on the page you want to keep." },
   "onboardingGuide": { "message": "First select text on the page, then save it from this popup." },
@@ -19,7 +19,7 @@
   "noSelectionError": { "message": "No selected text found" },
   "genericError": { "message": "Something went wrong" },
   "premiumRequired": {
-    "message": "You have reached the free limit ($LIMIT$ items). Please upgrade to Premium to keep saving.",
+    "message": "You have reached the free limit ($LIMIT$ highlights). Upgrade to Premium to keep saving.",
     "placeholders": {
       "limit": { "content": "$1" }
     }
@@ -33,35 +33,41 @@
   "isPremium": { "message": "Premium active" },
   "tagPlaceholder": { "message": "Tag (optional)" },
   "trialRemainingOne": {
-    "message": "Trial: $DAYS$ day left",
+    "message": "Trial ends in $DAYS$ day",
     "placeholders": {
       "days": { "content": "$1" }
     }
   },
   "trialRemainingOther": {
-    "message": "Trial: $DAYS$ days left",
+    "message": "Trial ends in $DAYS$ days",
     "placeholders": {
       "days": { "content": "$1" }
     }
   },
   "purchaseConfirm": {
-    "message": "Simulate Premium purchase ($PRICE$)?",
+    "message": "Activate Premium for this demo ($PRICE$)?",
     "placeholders": {
       "price": { "content": "$1" }
     }
   },
-  "loadingHighlights": { "message": "Loading highlights..." },
-  "deleteButton": { "message": "Delete highlight" },
+  "loadingHighlights": { "message": "Loading saved highlights..." },
+  "deleteButton": { "message": "Delete this highlight" },
   "openHighlight": { "message": "Open source page" },
   "highlightListLabel": { "message": "Saved highlights" },
+  "savedAt": {
+    "message": "Saved: $DATETIME$",
+    "placeholders": {
+      "datetime": { "content": "$1" }
+    }
+  },
   "savedCountOne": {
-    "message": "$COUNT$ item",
+    "message": "$COUNT$ highlight",
     "placeholders": {
       "count": { "content": "$1" }
     }
   },
   "savedCountOther": {
-    "message": "$COUNT$ items",
+    "message": "$COUNT$ highlights",
     "placeholders": {
       "count": { "content": "$1" }
     }
