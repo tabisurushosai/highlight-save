@@ -235,7 +235,7 @@ async function saveSelection() {
     if (text && typeof text === "string") {
       const url = tab.url || "";
       const ts = Date.now();
-      const tagInput = document.getElementById("tagInput") as HTMLInputElement;
+      const tagInput = document.getElementById("tagInput") as HTMLInputElement | null;
       const tag = tagInput?.value.trim() || "";
       const newItem = createHighlight({ text, url, ts, tag });
 
@@ -286,5 +286,3 @@ if (app) {
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
   renderHighlights();
 }
-
-export {};

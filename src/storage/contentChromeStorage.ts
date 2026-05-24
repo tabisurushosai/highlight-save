@@ -4,7 +4,7 @@ import type { HighlightStorageAdapter, HighlightStorageState } from "./types";
 const HIGHLIGHTS_KEY = "highlights";
 const IS_PREMIUM_KEY = "isPremium";
 const TRIAL_START_TS_KEY = "trial_start_ts";
-const STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY];
+const STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const;
 
 interface ChromeStorageData {
   highlights?: unknown;
@@ -18,7 +18,7 @@ function toHighlightList(value: unknown): Highlight[] {
 
 export const contentChromeHighlightStorage: HighlightStorageAdapter = {
   async load(): Promise<HighlightStorageState> {
-    const data = (await chrome.storage.local.get(STORAGE_KEYS)) as ChromeStorageData;
+    const data = (await chrome.storage.local.get([...STORAGE_KEYS])) as ChromeStorageData;
     const trialStartTs = typeof data.trial_start_ts === "number" ? data.trial_start_ts : undefined;
 
     return {
