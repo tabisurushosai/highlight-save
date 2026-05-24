@@ -17,14 +17,6 @@ export const TRIAL_DAYS = 7;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export function toHighlightList(value: unknown): Highlight[] {
-  return Array.isArray(value) ? (value as Highlight[]) : [];
-}
-
-export function toPremiumFlag(value: unknown): boolean {
-  return value === true;
-}
-
 export function createHighlight(input: CreateHighlightInput): Highlight {
   return {
     text: input.text,
