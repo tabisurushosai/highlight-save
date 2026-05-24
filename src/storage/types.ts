@@ -3,7 +3,7 @@ import type { Highlight } from "../core/highlights";
 export interface HighlightStorageState {
   highlights: Highlight[];
   isPremium: boolean;
-  trialStartTs?: number;
+  trialStartTs?: number | undefined;
 }
 
 export type HighlightStorageItems = Record<string, unknown>;
