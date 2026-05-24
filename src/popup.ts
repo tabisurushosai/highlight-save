@@ -30,6 +30,10 @@ function getUiLocale(): string | undefined {
   return chrome.i18n.getUILanguage() || undefined;
 }
 
+function getDocumentLanguage(): string {
+  return getUiLocale()?.replace("_", "-") || "ja";
+}
+
 function formatNumber(value: number): string {
   return new Intl.NumberFormat(getUiLocale()).format(value);
 }
@@ -101,7 +105,7 @@ async function renderHighlights() {
   if (!listContainer) return;
 
   listContainer.setAttribute("aria-busy", "true");
-  listContainer.innerHTML = `<div class="loadingState">${chrome.i18n.getMessage("loadingHighlights")}</div>`;
+  listContainer.innerHTML = `<div class="loadingState" role="status">${chrome.i18n.getMessage("loadingHighlights")}</div>`;
 
   const data = await chromeHighlightStorage.load();
   const highlights = data.highlights;
@@ -157,6 +161,7 @@ async function renderHighlights() {
   const openLabel = chrome.i18n.getMessage("openHighlight");
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = getHighlightSnippet(item.text);
+    const deleteAccessibleLabel = `${deleteLabel}: ${snippet}`;
     const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
       <div class="highlightItem" role="listitem">
@@ -166,7 +171,7 @@ async function renderHighlights() {
             ${escapeHtml(item.url)}
           </span>
         </button>
-        <button type="button" class="deleteBtn" data-ts="${item.ts}" aria-label="${escapeHtml(deleteLabel)}" title="${escapeHtml(deleteLabel)}">×</button>
+        <button type="button" class="deleteBtn" data-ts="${item.ts}" aria-label="${escapeHtml(deleteAccessibleLabel)}" title="${escapeHtml(deleteLabel)}">×</button>
       </div>
     `;
   }).join("");
@@ -253,9 +258,14 @@ async function saveSelection() {
 const app = document.getElementById("app");
 const appName = document.getElementById("appName");
 if (appName) {
-  appName.textContent = chrome.i18n.getMessage("appName");
+  const localizedAppName = chrome.i18n.getMessage("appName");
+  document.documentElement.lang = getDocumentLanguage();
+  document.title = localizedAppName;
+  appName.textContent = localizedAppName;
 }
 if (app) {
+  app.setAttribute("role", "main");
+  app.setAttribute("aria-labelledby", "appName");
   saveButtonLabel = chrome.i18n.getMessage("saveButton");
   app.innerHTML = `
     <div id="premiumInfo" class="premiumArea"></div>
@@ -265,12 +275,12 @@ if (app) {
       <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
       <button type="button" id="saveBtn" class="primaryButton">${saveButtonLabel}</button>
     </div>
-    <div id="status" class="statusMessage" role="status" aria-live="polite"></div>
+    <div id="status" class="statusMessage" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="sectionHeader">
-      <h2 class="sectionTitle">${chrome.i18n.getMessage("highlightListLabel")}</h2>
-      <span id="listMeta" class="sectionMeta">${getSavedCountMessage(0)}</span>
+      <h2 id="highlightListTitle" class="sectionTitle">${chrome.i18n.getMessage("highlightListLabel")}</h2>
+      <span id="listMeta" class="sectionMeta" aria-live="polite" aria-atomic="true">${getSavedCountMessage(0)}</span>
     </div>
-    <div id="listContainer" class="highlightList" role="list" aria-live="polite" aria-label="${chrome.i18n.getMessage("highlightListLabel")}"></div>
+    <div id="listContainer" class="highlightList" role="list" aria-live="polite" aria-labelledby="highlightListTitle" aria-describedby="listMeta"></div>
   `;
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
   renderHighlights();
