@@ -1,6 +1,20 @@
 import { copyFileSync, cpSync, mkdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
+
+const requiredExtensionFiles = [
+  "manifest.json",
+  "icons/icon16.png",
+  "icons/icon48.png",
+  "icons/icon128.png",
+] as const;
+
+function copyRequiredFile(assetPath: string, distDir: string): void {
+  const outputPath = resolve(distDir, assetPath);
+
+  mkdirSync(dirname(outputPath), { recursive: true });
+  copyFileSync(resolve(__dirname, assetPath), outputPath);
+}
 
 function copyExtensionAssets(): Plugin {
   return {
@@ -8,9 +22,9 @@ function copyExtensionAssets(): Plugin {
     writeBundle() {
       const distDir = resolve(__dirname, "dist");
 
-      mkdirSync(distDir, { recursive: true });
-      copyFileSync(resolve(__dirname, "manifest.json"), resolve(distDir, "manifest.json"));
-      cpSync(resolve(__dirname, "icons"), resolve(distDir, "icons"), { recursive: true });
+      for (const assetPath of requiredExtensionFiles) {
+        copyRequiredFile(assetPath, distDir);
+      }
       cpSync(resolve(__dirname, "_locales"), resolve(distDir, "_locales"), { recursive: true });
     },
   };
