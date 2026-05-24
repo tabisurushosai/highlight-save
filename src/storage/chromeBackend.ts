@@ -1,8 +1,13 @@
-import type { HighlightStorageBackend, HighlightStorageItems } from "./types";
+import type { HighlightStorageBackend, HighlightStorageItems, HighlightStorageKey } from "./types";
 
-export function createChromeStorageBackend(storageArea: chrome.storage.StorageArea): HighlightStorageBackend {
+export interface ChromeStorageArea {
+  get(keys: readonly string[]): Promise<HighlightStorageItems>;
+  set(items: HighlightStorageItems): Promise<void>;
+}
+
+export function createChromeStorageBackend(storageArea: ChromeStorageArea): HighlightStorageBackend {
   return {
-    async read(keys: readonly string[]): Promise<HighlightStorageItems> {
+    async read(keys: readonly HighlightStorageKey[]): Promise<HighlightStorageItems> {
       return storageArea.get([...keys]);
     },
 
