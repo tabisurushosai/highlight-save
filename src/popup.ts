@@ -17,19 +17,32 @@ import {
 import { chromeHighlightStorage } from "./storage/chromeStorage";
 
 const PREMIUM_PRICE_USD = 3;
+const HTML_ENTITIES = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  "\"": "&quot;",
+  "'": "&#39;",
+} as const;
+const HTML_ENTITY_PATTERN = /[&<>"']/g;
+
+type HtmlEntity = keyof typeof HTML_ENTITIES;
+type HtmlElementConstructor<T extends HTMLElement> = { new (): T };
+
 let clearStatusTimer: number | undefined;
 let saveButtonLabel = "";
 
 function escapeHtml(value: string): string {
-  const entities: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "\"": "&quot;",
-    "'": "&#39;",
-  };
+  return value.replace(HTML_ENTITY_PATTERN, (char) => HTML_ENTITIES[char as HtmlEntity]);
+}
 
-  return value.replace(/[&<>"']/g, (char) => entities[char]);
+function getTypedElementById<T extends HTMLElement>(
+  id: string,
+  constructor: HtmlElementConstructor<T>,
+): T | null {
+  const element = document.getElementById(id);
+
+  return element instanceof constructor ? element : null;
 }
 
 function getUiLocale(): string | undefined {
@@ -75,7 +88,7 @@ function setStatusMessage(message: string, tone: "success" | "error" | "info", c
 }
 
 function setSaveButtonPending(isPending: boolean) {
-  const saveButton = document.getElementById("saveBtn") as HTMLButtonElement | null;
+  const saveButton = getTypedElementById("saveBtn", HTMLButtonElement);
   if (!saveButton) return;
 
   saveButton.disabled = isPending;
@@ -187,19 +200,19 @@ async function renderHighlights() {
 
   listContainer.innerHTML = listHtml;
 
-  listContainer.querySelectorAll(".deleteBtn").forEach(btn => {
+  listContainer.querySelectorAll<HTMLButtonElement>(".deleteBtn").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      const ts = (e.currentTarget as HTMLElement).getAttribute("data-ts");
+      const ts = btn.getAttribute("data-ts");
       if (ts) {
         await deleteHighlight(Number(ts));
       }
     });
   });
 
-  listContainer.querySelectorAll(".highlightOpenBtn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      const url = (e.currentTarget as HTMLElement).getAttribute("data-url");
+  listContainer.querySelectorAll<HTMLButtonElement>(".highlightOpenBtn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const url = btn.getAttribute("data-url");
       if (url) {
         chrome.tabs.create({ url });
       }
@@ -234,7 +247,7 @@ async function saveSelection() {
       return;
     }
 
-    const results = await chrome.scripting.executeScript({
+    const results = await chrome.scripting.executeScript<[], string>({
       target: { tabId: tab.id },
       files: ["content.js"],
     });
@@ -243,7 +256,7 @@ async function saveSelection() {
     if (text && typeof text === "string") {
       const url = tab.url || "";
       const ts = Date.now();
-      const tagInput = document.getElementById("tagInput") as HTMLInputElement | null;
+      const tagInput = getTypedElementById("tagInput", HTMLInputElement);
       const tag = tagInput?.value.trim() || "";
       const newItem = createHighlight({ text, url, ts, tag });
 
