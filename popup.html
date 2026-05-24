@@ -1,7 +1,8 @@
 <!doctype html>
-<html>
+<html lang="ja">
   <head>
     <meta charset="utf-8">
+    <title>えらんで保存</title>
     <style>
       :root {
         color-scheme: light;
@@ -9,11 +10,12 @@
         --color-surface: #ffffff;
         --color-surface-soft: #f8fafc;
         --color-text: #17202a;
-        --color-muted: #526170;
-        --color-border: #d6dee8;
-        --color-primary: #1f6feb;
-        --color-primary-hover: #185abc;
+        --color-muted: #465667;
+        --color-border: #cbd6e2;
+        --color-primary: #185abc;
+        --color-primary-hover: #0b3d91;
         --color-primary-soft: #e8f1ff;
+        --color-focus: #0b57d0;
         --color-success-bg: #e8f5ed;
         --color-success-text: #0f5f39;
         --color-error-bg: #fdecec;
@@ -115,8 +117,8 @@
 
       .textInput {
         width: 100%;
-        min-height: 44px;
-        padding: 9px 11px;
+        min-height: 48px;
+        padding: 11px 12px;
         border: 1px solid var(--color-border);
         border-radius: 10px;
         background: #ffffff;
@@ -134,21 +136,22 @@
       .secondaryButton:focus-visible,
       .highlightOpenBtn:focus-visible,
       .deleteBtn:focus-visible {
-        outline: 3px solid #0b57d0;
-        outline-offset: 3px;
+        outline: 3px solid var(--color-focus);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 5px rgb(11 87 208 / 18%);
       }
 
       .textInput:focus {
         border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgb(31 111 235 / 10%);
+        box-shadow: 0 0 0 3px rgb(24 90 188 / 14%);
       }
 
       .primaryButton,
       .secondaryButton {
         width: 100%;
-        min-height: 44px;
+        min-height: 48px;
         border: 0;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
         font: inherit;
         font-weight: 700;
@@ -164,7 +167,7 @@
       }
 
       .primaryButton:disabled {
-        background: #8aaee8;
+        background: #4f6f9f;
         cursor: progress;
       }
 
@@ -172,6 +175,10 @@
         border: 1px solid #d98f3c;
         background: #ffffff;
         color: var(--color-warning-text);
+      }
+
+      .secondaryButton:hover {
+        background: #fff3e4;
       }
 
       .statusMessage {
@@ -286,8 +293,8 @@
       .highlightOpenBtn {
         display: block;
         width: 100%;
-        min-height: 44px;
-        padding: 13px 58px 13px 13px;
+        min-height: 56px;
+        padding: 14px 64px 14px 14px;
         border: 1px solid var(--color-border);
         border-radius: 12px;
         background: var(--color-surface);
@@ -334,11 +341,11 @@
 
       .deleteBtn {
         position: absolute;
-        top: 6px;
-        right: 6px;
+        top: 8px;
+        right: 8px;
         z-index: 1;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border: 0;
         border-radius: 999px;
         background: transparent;
@@ -355,7 +362,7 @@
     </style>
   </head>
   <body>
-    <h3 id="appName"></h3>
+    <h1 id="appName"></h1>
     <div id="app">...</div>
     <script type="module" src="/src/popup.ts"></script>
   </body>
