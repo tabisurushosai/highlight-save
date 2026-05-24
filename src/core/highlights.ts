@@ -38,10 +38,6 @@ export function deleteHighlightByTimestamp(highlights: Highlight[], ts: number):
   return highlights.filter((item) => item.ts !== ts);
 }
 
-export function getHighlightsForUrl(highlights: Highlight[], url: string): Highlight[] {
-  return highlights.filter((item) => item.url === url);
-}
-
 export function getHighlightSnippet(text: string, maxLength = 50): string {
   return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 }

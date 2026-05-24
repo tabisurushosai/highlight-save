@@ -1,4 +1,3 @@
-import type { Highlight } from "./core/highlights";
 import { contentChromeHighlightStorage } from "./storage/contentChromeStorage";
 
 /**
@@ -7,9 +6,9 @@ import { contentChromeHighlightStorage } from "./storage/contentChromeStorage";
 async function restoreHighlights() {
   const url = window.location.href;
   const data = await contentChromeHighlightStorage.load();
-  const pageHighlights = data.highlights.filter((item: Highlight) => item.url === url);
+  const pageHighlights = data.highlights.filter((item) => item.url === url);
 
-  pageHighlights.forEach((item: Highlight) => {
+  pageHighlights.forEach((item) => {
     applyHighlight(item.text);
   });
 }
@@ -19,12 +18,12 @@ async function restoreHighlights() {
  */
 function applyHighlight(textToMatch: string) {
   if (!textToMatch) return;
-  
+
   // TreeWalkerを使ってテキストノードを走査
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
   let node = walker.nextNode();
   const nodesToHighlight: Node[] = [];
-  
+
   while (node) {
     if (node.textContent && node.textContent.includes(textToMatch)) {
       nodesToHighlight.push(node);
@@ -33,25 +32,21 @@ function applyHighlight(textToMatch: string) {
   }
 
   nodesToHighlight.forEach(node => {
-    const content = node.textContent!;
-    let index = content.indexOf(textToMatch);
-    
-    // 同一ノード内に複数ある場合も考慮 (簡易版)
-    while (index !== -1) {
-      const range = document.createRange();
-      try {
-        range.setStart(node, index);
-        range.setEnd(node, index + textToMatch.length);
-        
-        const mark = document.createElement("mark");
-        range.surroundContents(mark);
-        
-        // 次の検索位置へ (surroundContentsでノードが分割されるため、実際には複雑だが簡易的に終了)
-        break; 
-      } catch (e) {
-        // ノードが跨がっている場合などは失敗する
-        break;
-      }
+    const content = node.textContent;
+    if (!content) return;
+
+    const index = content.indexOf(textToMatch);
+    if (index === -1) return;
+
+    const range = document.createRange();
+    try {
+      range.setStart(node, index);
+      range.setEnd(node, index + textToMatch.length);
+
+      const mark = document.createElement("mark");
+      range.surroundContents(mark);
+    } catch {
+      // ノードが跨がっている場合などは失敗する
     }
   });
 }
@@ -70,7 +65,7 @@ function highlightAndGetText(): string {
     const mark = document.createElement("mark");
     try {
       range.surroundContents(mark);
-    } catch (e) {
+    } catch {
       const contents = range.extractContents();
       mark.appendChild(contents);
       range.insertNode(mark);
