@@ -108,6 +108,7 @@ function getSavedAtMessage(timestamp: number): string {
 function renderEmptyState(listContainer: HTMLElement) {
   listContainer.innerHTML = `
     <div class="emptyState" role="note">
+      <p class="emptyStateKicker">${chrome.i18n.getMessage("emptyStateKicker")}</p>
       <div class="emptyStateTitle">${chrome.i18n.getMessage("emptyStateTitle")}</div>
       <p class="emptyStateDescription">${chrome.i18n.getMessage("emptyStateDescription")}</p>
       <ol class="emptyStateSteps">
