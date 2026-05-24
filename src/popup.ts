@@ -96,6 +96,7 @@ function renderEmptyState(listContainer: HTMLElement) {
         <li>${chrome.i18n.getMessage("emptyStateStepSave")}</li>
         <li>${chrome.i18n.getMessage("emptyStateStepReview")}</li>
       </ol>
+      <p class="emptyStateNextAction">${chrome.i18n.getMessage("emptyStateNextAction")}</p>
     </div>
   `;
 }
