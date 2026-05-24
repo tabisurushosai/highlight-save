@@ -6,9 +6,9 @@ import {
   toHighlightStorageState,
   TRIAL_START_TS_KEY,
 } from "./schema";
-import type { HighlightStorageAdapter, KeyValueStorageArea } from "./types";
+import type { HighlightKeyValueStorage, HighlightStorageAdapter } from "./types";
 
-export function createHighlightStorageAdapter(storageArea: KeyValueStorageArea): HighlightStorageAdapter {
+export function createHighlightStorageAdapter(storageArea: HighlightKeyValueStorage): HighlightStorageAdapter {
   return {
     async load() {
       const data = await storageArea.get(getHighlightStorageKeys());
