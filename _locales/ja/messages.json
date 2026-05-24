@@ -10,7 +10,11 @@
   "emptyStateStepReview": { "message": "保存後はここから取得元ページを開けます" },
   "onboardingGuide": { "message": "まずはページ上の文章を選択してから「選択を保存」を押してください。" },
   "saveButton": { "message": "選択を保存" },
+  "savingButton": { "message": "保存中..." },
+  "savingHighlight": { "message": "選択した文章を保存しています..." },
   "savedSuccess": { "message": "保存しました" },
+  "deletingHighlight": { "message": "削除しています..." },
+  "deletedSuccess": { "message": "削除しました" },
   "noSelectionError": { "message": "選択したテキストが見つかりません" },
   "genericError": { "message": "処理中にエラーが発生しました" },
   "premiumRequired": {
@@ -48,5 +52,17 @@
   "loadingHighlights": { "message": "読み込み中..." },
   "deleteButton": { "message": "ハイライトを削除" },
   "openHighlight": { "message": "取得元ページを開く" },
-  "highlightListLabel": { "message": "保存済みハイライト" }
+  "highlightListLabel": { "message": "保存済みハイライト" },
+  "savedCountOne": {
+    "message": "$COUNT$件",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  },
+  "savedCountOther": {
+    "message": "$COUNT$件",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  }
 }

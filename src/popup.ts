@@ -12,6 +12,7 @@ import { chromeHighlightStorage } from "./storage/chromeStorage";
 
 const PREMIUM_PRICE_USD = 3;
 let clearStatusTimer: number | undefined;
+let saveButtonLabel = "";
 
 function escapeHtml(value: string): string {
   const entities: Record<string, string> = {
@@ -47,7 +48,7 @@ function getTrialRemainingMessage(remainingDays: number): string {
   return chrome.i18n.getMessage(messageName, [formatNumber(remainingDays)]);
 }
 
-function setStatusMessage(message: string, tone: "success" | "error", clearAfterMs?: number) {
+function setStatusMessage(message: string, tone: "success" | "error" | "info", clearAfterMs?: number) {
   const status = document.getElementById("status");
   if (!status) return;
 
@@ -66,6 +67,19 @@ function setStatusMessage(message: string, tone: "success" | "error", clearAfter
       clearStatusTimer = undefined;
     }, clearAfterMs);
   }
+}
+
+function setSaveButtonPending(isPending: boolean) {
+  const saveButton = document.getElementById("saveBtn") as HTMLButtonElement | null;
+  if (!saveButton) return;
+
+  saveButton.disabled = isPending;
+  saveButton.textContent = isPending ? chrome.i18n.getMessage("savingButton") : saveButtonLabel;
+}
+
+function getSavedCountMessage(count: number): string {
+  const messageName = count === 1 ? "savedCountOne" : "savedCountOther";
+  return chrome.i18n.getMessage(messageName, [formatNumber(count)]);
 }
 
 function renderEmptyState(listContainer: HTMLElement) {
@@ -92,6 +106,10 @@ async function renderHighlights() {
   const data = await chromeHighlightStorage.load();
   const highlights = data.highlights;
   const isPremium = data.isPremium;
+  const listMeta = document.getElementById("listMeta");
+  if (listMeta) {
+    listMeta.textContent = getSavedCountMessage(highlights.length);
+  }
   const onboardingGuide = document.getElementById("onboardingGuide");
   if (onboardingGuide) {
     onboardingGuide.hidden = highlights.length > 0;
@@ -176,27 +194,32 @@ async function renderHighlights() {
 }
 
 async function deleteHighlight(ts: number) {
+  setStatusMessage(chrome.i18n.getMessage("deletingHighlight"), "info");
   const data = await chromeHighlightStorage.load();
   const highlights = deleteHighlightByTimestamp(data.highlights, ts);
 
   await chromeHighlightStorage.saveHighlights(highlights);
-  renderHighlights();
+  await renderHighlights();
+  setStatusMessage(chrome.i18n.getMessage("deletedSuccess"), "success", 2000);
 }
 
 async function saveSelection() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return;
 
-  const data = await chromeHighlightStorage.load();
-  const highlights = data.highlights;
-  const isPremium = data.isPremium;
-
-  if (!canSaveHighlight(highlights, isPremium)) {
-    setStatusMessage(chrome.i18n.getMessage("premiumRequired", [formatNumber(FREE_HIGHLIGHT_LIMIT)]), "error");
-    return;
-  }
+  setSaveButtonPending(true);
+  setStatusMessage(chrome.i18n.getMessage("savingHighlight"), "info");
 
   try {
+    const data = await chromeHighlightStorage.load();
+    const highlights = data.highlights;
+    const isPremium = data.isPremium;
+
+    if (!canSaveHighlight(highlights, isPremium)) {
+      setStatusMessage(chrome.i18n.getMessage("premiumRequired", [formatNumber(FREE_HIGHLIGHT_LIMIT)]), "error");
+      return;
+    }
+
     const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content.js"],
@@ -215,13 +238,15 @@ async function saveSelection() {
       if (tagInput) tagInput.value = "";
 
       setStatusMessage(chrome.i18n.getMessage("savedSuccess"), "success", 2000);
-      renderHighlights();
+      await renderHighlights();
     } else {
       setStatusMessage(chrome.i18n.getMessage("noSelectionError"), "error", 2000);
     }
   } catch (err) {
     console.error("Failed to execute script:", err);
     setStatusMessage(chrome.i18n.getMessage("genericError"), "error");
+  } finally {
+    setSaveButtonPending(false);
   }
 }
 
@@ -231,15 +256,20 @@ if (appName) {
   appName.textContent = chrome.i18n.getMessage("appName");
 }
 if (app) {
+  saveButtonLabel = chrome.i18n.getMessage("saveButton");
   app.innerHTML = `
     <div id="premiumInfo" class="premiumArea"></div>
     <div class="savePanel">
       <p id="onboardingGuide" class="onboardingGuide">${chrome.i18n.getMessage("onboardingGuide")}</p>
       <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
       <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
-      <button type="button" id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
+      <button type="button" id="saveBtn" class="primaryButton">${saveButtonLabel}</button>
     </div>
     <div id="status" class="statusMessage" role="status" aria-live="polite"></div>
+    <div class="sectionHeader">
+      <h2 class="sectionTitle">${chrome.i18n.getMessage("highlightListLabel")}</h2>
+      <span id="listMeta" class="sectionMeta">${getSavedCountMessage(0)}</span>
+    </div>
     <div id="listContainer" class="highlightList" role="list" aria-live="polite" aria-label="${chrome.i18n.getMessage("highlightListLabel")}"></div>
   `;
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
