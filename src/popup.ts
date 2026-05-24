@@ -92,6 +92,8 @@ function setSaveButtonPending(isPending: boolean) {
   if (!saveButton) return;
 
   saveButton.disabled = isPending;
+  saveButton.setAttribute("aria-disabled", String(isPending));
+  saveButton.setAttribute("aria-busy", String(isPending));
   saveButton.textContent = isPending ? chrome.i18n.getMessage("savingButton") : saveButtonLabel;
 }
 
@@ -106,6 +108,8 @@ function getSavedAtMessage(timestamp: number): string {
 }
 
 function renderEmptyState(listContainer: HTMLElement) {
+  listContainer.removeAttribute("role");
+  listContainer.removeAttribute("aria-describedby");
   listContainer.innerHTML = `
     <div class="emptyState" role="note">
       <p class="emptyStateKicker">${chrome.i18n.getMessage("emptyStateKicker")}</p>
@@ -125,6 +129,7 @@ async function renderHighlights() {
   const listContainer = document.getElementById("listContainer");
   if (!listContainer) return;
 
+  listContainer.removeAttribute("role");
   listContainer.setAttribute("aria-busy", "true");
   listContainer.innerHTML = `<div class="loadingState" role="status">${chrome.i18n.getMessage("loadingHighlights")}</div>`;
 
@@ -156,10 +161,10 @@ async function renderHighlights() {
 
       premiumInfo.innerHTML = `
         <div class="trialCard">
-          <div class="trialText">
+          <div id="trialStatus" class="trialText">
           ${getTrialRemainingMessage(remainingDays)}
           </div>
-          <button type="button" id="upgradeBtn" class="secondaryButton">${chrome.i18n.getMessage("upgradeButton", [premiumPrice])}</button>
+          <button type="button" id="upgradeBtn" class="secondaryButton" aria-describedby="trialStatus">${chrome.i18n.getMessage("upgradeButton", [premiumPrice])}</button>
         </div>
       `;
       document.getElementById("upgradeBtn")?.addEventListener("click", async () => {
@@ -180,6 +185,8 @@ async function renderHighlights() {
 
   const deleteLabel = chrome.i18n.getMessage("deleteButton");
   const openLabel = chrome.i18n.getMessage("openHighlight");
+  listContainer.setAttribute("role", "list");
+  listContainer.setAttribute("aria-describedby", "listMeta listInteractionHint");
   const listHtml = [...highlights].reverse().map((item: Highlight) => {
     const snippet = getHighlightSnippet(item.text);
     const deleteAccessibleLabel = `${deleteLabel}: ${snippet}`;
@@ -221,6 +228,16 @@ async function renderHighlights() {
   });
 }
 
+function focusAfterListUpdate() {
+  const firstOpenButton = document.querySelector<HTMLButtonElement>(".highlightOpenBtn");
+  if (firstOpenButton) {
+    firstOpenButton.focus();
+    return;
+  }
+
+  getTypedElementById("saveBtn", HTMLButtonElement)?.focus();
+}
+
 async function deleteHighlight(ts: number) {
   setStatusMessage(chrome.i18n.getMessage("deletingHighlight"), "info");
   const data = await chromeHighlightStorage.load();
@@ -228,6 +245,7 @@ async function deleteHighlight(ts: number) {
 
   await chromeHighlightStorage.saveHighlights(highlights);
   await renderHighlights();
+  focusAfterListUpdate();
   setStatusMessage(chrome.i18n.getMessage("deletedSuccess"), "success", 2000);
 }
 
@@ -291,19 +309,21 @@ if (app) {
   app.setAttribute("aria-labelledby", "appName");
   saveButtonLabel = chrome.i18n.getMessage("saveButton");
   app.innerHTML = `
-    <div id="premiumInfo" class="premiumArea"></div>
+    <div id="premiumInfo" class="premiumArea" aria-live="polite" aria-atomic="true"></div>
     <div class="savePanel">
       <p id="onboardingGuide" class="onboardingGuide">${chrome.i18n.getMessage("onboardingGuide")}</p>
       <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
-      <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
-      <button type="button" id="saveBtn" class="primaryButton">${saveButtonLabel}</button>
+      <p id="tagInputHelp" class="visuallyHidden">${chrome.i18n.getMessage("tagInputHelp")}</p>
+      <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}" autocomplete="off" aria-describedby="tagInputHelp">
+      <button type="button" id="saveBtn" class="primaryButton" aria-disabled="false" aria-busy="false">${saveButtonLabel}</button>
     </div>
     <div id="status" class="statusMessage" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="sectionHeader">
       <h2 id="highlightListTitle" class="sectionTitle">${chrome.i18n.getMessage("highlightListLabel")}</h2>
       <span id="listMeta" class="sectionMeta" aria-live="polite" aria-atomic="true">${getSavedCountMessage(0)}</span>
     </div>
-    <div id="listContainer" class="highlightList" role="list" aria-live="polite" aria-labelledby="highlightListTitle" aria-describedby="listMeta"></div>
+    <p id="listInteractionHint" class="visuallyHidden">${chrome.i18n.getMessage("listInteractionHint")}</p>
+    <div id="listContainer" class="highlightList" aria-live="polite" aria-labelledby="highlightListTitle"></div>
   `;
   document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
   renderHighlights();

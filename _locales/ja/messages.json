@@ -33,6 +33,7 @@
   },
   "isPremium": { "message": "Premium 適用中" },
   "tagPlaceholder": { "message": "タグ（任意）" },
+  "tagInputHelp": { "message": "必要な場合だけ、保存するハイライトに付ける短いタグを入力します。" },
   "trialRemainingOne": {
     "message": "トライアルは残り$DAYS$日です",
     "placeholders": {
@@ -55,6 +56,7 @@
   "deleteButton": { "message": "このハイライトを削除" },
   "openHighlight": { "message": "取得元ページを開く" },
   "highlightListLabel": { "message": "保存済みハイライト" },
+  "listInteractionHint": { "message": "各ハイライトのボタンにフォーカスしてEnterまたはSpaceで取得元ページを開けます。削除ボタンでハイライトを削除できます。" },
   "savedAt": {
     "message": "保存日時: $DATETIME$",
     "placeholders": {
