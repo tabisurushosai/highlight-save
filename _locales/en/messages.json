@@ -10,7 +10,11 @@
   "emptyStateStepReview": { "message": "After saving, open the source page from this list" },
   "onboardingGuide": { "message": "Select text on the page first, then press \"Save selection\"." },
   "saveButton": { "message": "Save selection" },
+  "savingButton": { "message": "Saving..." },
+  "savingHighlight": { "message": "Saving the selected text..." },
   "savedSuccess": { "message": "Saved!" },
+  "deletingHighlight": { "message": "Deleting..." },
+  "deletedSuccess": { "message": "Deleted" },
   "noSelectionError": { "message": "No selected text found" },
   "genericError": { "message": "Something went wrong" },
   "premiumRequired": {
@@ -48,5 +52,17 @@
   "loadingHighlights": { "message": "Loading highlights..." },
   "deleteButton": { "message": "Delete highlight" },
   "openHighlight": { "message": "Open source page" },
-  "highlightListLabel": { "message": "Saved highlights" }
+  "highlightListLabel": { "message": "Saved highlights" },
+  "savedCountOne": {
+    "message": "$COUNT$ item",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  },
+  "savedCountOther": {
+    "message": "$COUNT$ items",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  }
 }
