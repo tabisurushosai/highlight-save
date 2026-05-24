@@ -1,7 +1,15 @@
+export type SupportedLocale = "ja" | "en";
+
 export function normalizeLocale(locale?: string): string | undefined {
   const trimmedLocale = locale?.trim();
 
   return trimmedLocale ? trimmedLocale.replace(/_/g, "-") : undefined;
+}
+
+export function resolveSupportedLocale(locale?: string): SupportedLocale {
+  const language = normalizeLocale(locale)?.toLowerCase().split("-")[0];
+
+  return language === "en" ? "en" : "ja";
 }
 
 export function formatLocalizedNumber(value: number, locale?: string): string {

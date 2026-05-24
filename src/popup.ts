@@ -12,7 +12,7 @@ import {
   formatLocalizedCurrency,
   formatLocalizedDateTime,
   formatLocalizedNumber,
-  normalizeLocale,
+  resolveSupportedLocale,
 } from "./core/format";
 import { chromeHighlightStorage } from "./storage/chromeStorage";
 
@@ -45,12 +45,12 @@ function getTypedElementById<T extends HTMLElement>(
   return element instanceof constructor ? element : null;
 }
 
-function getUiLocale(): string | undefined {
-  return normalizeLocale(chrome.i18n.getUILanguage()) || undefined;
+function getUiLocale(): string {
+  return resolveSupportedLocale(chrome.i18n.getUILanguage());
 }
 
 function getDocumentLanguage(): string {
-  return getUiLocale() || "ja";
+  return getUiLocale();
 }
 
 function formatNumber(value: number): string {

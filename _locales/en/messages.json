@@ -1,9 +1,9 @@
 {
   "extName": { "message": "Pick & Save" },
-  "extDesc": { "message": "Highlight and save selected text on a page, then review it later in one place." },
+  "extDesc": { "message": "Save highlighted text from pages and review it later in one place." },
   "appName": { "message": "Pick & Save" },
-  "noHighlights": { "message": "No highlights saved" },
-  "emptyStateKicker": { "message": "First-time flow" },
+  "noHighlights": { "message": "No saved highlights" },
+  "emptyStateKicker": { "message": "Quick start" },
   "emptyStateTitle": { "message": "Select text to save it here" },
   "emptyStateDescription": { "message": "Saved highlights appear in this list so you can return to the source page later." },
   "emptyStateStepSelect": { "message": "Drag to select text you want to keep on a web page" },
@@ -14,8 +14,8 @@
   "saveButton": { "message": "Save selection" },
   "savingButton": { "message": "Saving..." },
   "savingHighlight": { "message": "Saving the selected text..." },
-  "savedSuccess": { "message": "Saved!" },
-  "deletingHighlight": { "message": "Deleting..." },
+  "savedSuccess": { "message": "Saved" },
+  "deletingHighlight": { "message": "Deleting highlight..." },
   "deletedSuccess": { "message": "Deleted" },
   "noSelectionError": { "message": "Select text on the page, then press \"Save selection\" again." },
   "genericError": { "message": "Something went wrong" },
@@ -47,7 +47,7 @@
     }
   },
   "purchaseConfirm": {
-    "message": "Activate Premium for this demo ($PRICE$)?",
+    "message": "Activate Premium for this demo? ($PRICE$)",
     "placeholders": {
       "price": { "content": "$1" }
     }
@@ -56,9 +56,9 @@
   "deleteButton": { "message": "Delete this highlight" },
   "openHighlight": { "message": "Open source page" },
   "highlightListLabel": { "message": "Saved highlights" },
-  "listInteractionHint": { "message": "Focus a highlight button and press Enter or Space to open the source page. Use the delete button to remove a highlight." },
+  "listInteractionHint": { "message": "Focus a highlight button and press Enter or Space to open the source page. Use its delete button to remove the highlight." },
   "savedAt": {
-    "message": "Saved: $DATETIME$",
+    "message": "Saved on $DATETIME$",
     "placeholders": {
       "datetime": { "content": "$1" }
     }

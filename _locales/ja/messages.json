@@ -1,10 +1,10 @@
 {
   "extName": { "message": "えらんで保存" },
-  "extDesc": { "message": "ページで選んだ文章をハイライトとして保存し、あとからまとめて見返せます。調べものや学習に便利です。" },
+  "extDesc": { "message": "ページ上で選んだ文章をハイライトとして保存し、あとからまとめて見返せます。調べものや学習に便利です。" },
   "appName": { "message": "えらんで保存" },
-  "noHighlights": { "message": "保存されたハイライトはありません" },
+  "noHighlights": { "message": "保存済みのハイライトはありません" },
   "emptyStateKicker": { "message": "初回の流れ" },
-  "emptyStateTitle": { "message": "気になる文章を選ぶと、ここに保存されます" },
+  "emptyStateTitle": { "message": "気になる文章を選ぶと、ここにハイライトとして保存されます" },
   "emptyStateDescription": { "message": "保存したハイライトはこの一覧に並び、あとから取得元ページへ戻れます。" },
   "emptyStateStepSelect": { "message": "Webページで残したい文章をドラッグして選択する" },
   "emptyStateStepSave": { "message": "ツールバーからこのポップアップを開き、「選択を保存」を押す" },
@@ -20,18 +20,18 @@
   "noSelectionError": { "message": "ページ上の文章を選択してから、もう一度「選択を保存」を押してください" },
   "genericError": { "message": "処理中にエラーが発生しました" },
   "premiumRequired": {
-    "message": "無料枠（$LIMIT$件のハイライト）の上限に達しました。保存を続けるには Premium へアップグレードしてください。",
+    "message": "無料枠（$LIMIT$件）の上限に達しました。保存を続けるにはPremiumにアップグレードしてください。",
     "placeholders": {
       "limit": { "content": "$1" }
     }
   },
   "upgradeButton": {
-    "message": "Premium へアップグレード（$PRICE$）",
+    "message": "Premiumにアップグレード（$PRICE$）",
     "placeholders": {
       "price": { "content": "$1" }
     }
   },
-  "isPremium": { "message": "Premium 適用中" },
+  "isPremium": { "message": "Premium適用中" },
   "tagPlaceholder": { "message": "タグ（任意）" },
   "tagInputHelp": { "message": "必要な場合だけ、保存するハイライトに付ける短いタグを入力します。" },
   "trialRemainingOne": {
@@ -47,7 +47,7 @@
     }
   },
   "purchaseConfirm": {
-    "message": "Premium を有効にしますか？（デモ: $PRICE$）",
+    "message": "Premiumを有効にしますか？（デモ：$PRICE$）",
     "placeholders": {
       "price": { "content": "$1" }
     }
@@ -56,9 +56,9 @@
   "deleteButton": { "message": "このハイライトを削除" },
   "openHighlight": { "message": "取得元ページを開く" },
   "highlightListLabel": { "message": "保存済みハイライト" },
-  "listInteractionHint": { "message": "各ハイライトのボタンにフォーカスしてEnterまたはSpaceで取得元ページを開けます。削除ボタンでハイライトを削除できます。" },
+  "listInteractionHint": { "message": "各ハイライトのボタンにフォーカスして Enter キーまたは Space キーを押すと取得元ページを開けます。削除ボタンでハイライトを削除できます。" },
   "savedAt": {
-    "message": "保存日時: $DATETIME$",
+    "message": "保存日時：$DATETIME$",
     "placeholders": {
       "datetime": { "content": "$1" }
     }
