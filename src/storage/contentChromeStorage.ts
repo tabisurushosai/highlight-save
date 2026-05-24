@@ -1,5 +1,10 @@
 import type { Highlight } from "../core/highlights";
-import type { HighlightStorageAdapter, HighlightStorageState } from "./types";
+import type {
+  HighlightStorageAdapter,
+  HighlightStorageBackend,
+  HighlightStorageItems,
+  HighlightStorageState,
+} from "./types";
 
 const HIGHLIGHTS_KEY = "highlights";
 const IS_PREMIUM_KEY = "isPremium";
@@ -12,31 +17,55 @@ interface ChromeStorageData {
   trial_start_ts?: unknown;
 }
 
+function createContentChromeStorageBackend(storageArea: chrome.storage.StorageArea): HighlightStorageBackend {
+  return {
+    async get(keys: readonly string[]): Promise<HighlightStorageItems> {
+      return storageArea.get([...keys]);
+    },
+
+    async set(items: HighlightStorageItems): Promise<void> {
+      await storageArea.set(items);
+    },
+  };
+}
+
 function toHighlightList(value: unknown): Highlight[] {
   return Array.isArray(value) ? (value as Highlight[]) : [];
 }
 
-export const contentChromeHighlightStorage: HighlightStorageAdapter = {
-  async load(): Promise<HighlightStorageState> {
-    const data = (await chrome.storage.local.get([...STORAGE_KEYS])) as ChromeStorageData;
-    const trialStartTs = typeof data.trial_start_ts === "number" ? data.trial_start_ts : undefined;
+function toHighlightStorageState(value: HighlightStorageItems): HighlightStorageState {
+  const data = value as ChromeStorageData;
+  const trialStartTs = typeof data.trial_start_ts === "number" ? data.trial_start_ts : undefined;
 
-    return {
-      highlights: toHighlightList(data.highlights),
-      isPremium: data.isPremium === true,
-      trialStartTs,
-    };
-  },
+  return {
+    highlights: toHighlightList(data.highlights),
+    isPremium: data.isPremium === true,
+    trialStartTs,
+  };
+}
 
-  async saveHighlights(highlights: Highlight[]): Promise<void> {
-    await chrome.storage.local.set({ [HIGHLIGHTS_KEY]: highlights });
-  },
+export function createContentChromeHighlightStorage(
+  storageArea: chrome.storage.StorageArea = chrome.storage.local,
+): HighlightStorageAdapter {
+  const storageBackend = createContentChromeStorageBackend(storageArea);
 
-  async savePremium(isPremium: boolean): Promise<void> {
-    await chrome.storage.local.set({ [IS_PREMIUM_KEY]: isPremium });
-  },
+  return {
+    async load(): Promise<HighlightStorageState> {
+      return toHighlightStorageState(await storageBackend.get([...STORAGE_KEYS]));
+    },
 
-  async saveTrialStartTs(trialStartTs: number): Promise<void> {
-    await chrome.storage.local.set({ [TRIAL_START_TS_KEY]: trialStartTs });
-  },
-};
+    async saveHighlights(highlights: Highlight[]): Promise<void> {
+      await storageBackend.set({ [HIGHLIGHTS_KEY]: highlights });
+    },
+
+    async savePremium(isPremium: boolean): Promise<void> {
+      await storageBackend.set({ [IS_PREMIUM_KEY]: isPremium });
+    },
+
+    async saveTrialStartTs(trialStartTs: number): Promise<void> {
+      await storageBackend.set({ [TRIAL_START_TS_KEY]: trialStartTs });
+    },
+  };
+}
+
+export const contentChromeHighlightStorage = createContentChromeHighlightStorage();
