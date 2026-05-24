@@ -6,24 +6,25 @@
     <style>
       :root {
         color-scheme: light;
-        --color-bg: #eef3f8;
+        --color-bg: #f4f7fb;
         --color-surface: #ffffff;
-        --color-surface-soft: #f7fafc;
-        --color-text: #111827;
-        --color-muted: #334155;
-        --color-border: #c7d2df;
-        --color-border-soft: #dbe4ee;
-        --color-primary: #185abc;
-        --color-primary-hover: #0b3d91;
-        --color-primary-soft: #e8f1ff;
-        --color-focus: #0b57d0;
+        --color-surface-soft: #f8fafc;
+        --color-text: #0f172a;
+        --color-muted: #475569;
+        --color-border: #cbd5e1;
+        --color-border-soft: #e2e8f0;
+        --color-primary: #1557b0;
+        --color-primary-hover: #0f4590;
+        --color-primary-soft: #eaf2ff;
+        --color-focus: #1d4ed8;
         --color-success-bg: #e8f5ed;
-        --color-success-text: #0f5f39;
+        --color-success-text: #0b5c35;
         --color-error-bg: #fdecec;
-        --color-error-text: #8f1717;
+        --color-error-text: #8b1a1a;
         --color-warning-bg: #fff7ed;
-        --color-warning-text: #713900;
-        --shadow-card: 0 12px 28px rgb(15 23 42 / 11%);
+        --color-warning-text: #733b00;
+        --shadow-card: 0 14px 32px rgb(15 23 42 / 10%);
+        --shadow-item: 0 1px 2px rgb(15 23 42 / 8%);
       }
 
       * {
@@ -31,31 +32,31 @@
       }
 
       body {
-        width: 390px;
+        width: 392px;
         margin: 0;
-        padding: 18px;
+        padding: 16px;
         background: var(--color-bg);
         color: var(--color-text);
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 14px;
-        line-height: 1.55;
+        line-height: 1.6;
       }
 
       #appName {
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         color: var(--color-text);
         font-size: 20px;
-        font-weight: 700;
-        letter-spacing: 0.005em;
+        font-weight: 800;
+        letter-spacing: 0.01em;
       }
 
       #app {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        padding: 18px;
+        gap: 14px;
+        padding: 16px;
         border: 1px solid var(--color-border);
-        border-radius: 18px;
+        border-radius: 20px;
         background: var(--color-surface);
         box-shadow: var(--shadow-card);
       }
@@ -66,8 +67,8 @@
 
       .premiumBadge,
       .trialCard {
-        border-radius: 12px;
-        padding: 12px;
+        border-radius: 14px;
+        padding: 12px 13px;
         font-size: 13px;
         line-height: 1.45;
       }
@@ -95,15 +96,15 @@
       .savePanel {
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 10px;
         padding: 14px;
         border: 1px solid var(--color-border-soft);
-        border-radius: 14px;
+        border-radius: 16px;
         background: var(--color-surface-soft);
       }
 
       .onboardingGuide {
-        margin: 0 0 3px;
+        margin: 0;
         padding: 11px 12px;
         border: 1px solid #c9dcff;
         border-radius: 12px;
@@ -119,14 +120,14 @@
         margin-bottom: 0;
         color: var(--color-muted);
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 0.02em;
       }
 
       .textInput {
         width: 100%;
-        min-height: 48px;
-        padding: 12px;
+        min-height: 46px;
+        padding: 11px 12px;
         border: 1px solid var(--color-border);
         border-radius: 12px;
         background: #ffffff;
@@ -162,7 +163,8 @@
         border-radius: 12px;
         cursor: pointer;
         font: inherit;
-        font-weight: 700;
+        font-weight: 800;
+        letter-spacing: 0.01em;
       }
 
       .primaryButton {
@@ -175,7 +177,7 @@
       }
 
       .primaryButton:disabled {
-        background: #4f6f9f;
+        background: #59749d;
         cursor: progress;
       }
 
@@ -193,15 +195,16 @@
       .statusMessage {
         min-height: 0;
         margin: 0;
-        border-radius: 12px;
+        border-radius: 13px;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
         line-height: 1.45;
       }
 
       .statusMessage:not(:empty) {
         padding: 10px 12px;
         border: 1px solid transparent;
+        border-left-width: 4px;
       }
 
       .statusMessage:empty {
@@ -228,11 +231,11 @@
 
       .sectionHeader {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
         gap: 10px;
         border-top: 1px solid var(--color-border-soft);
-        padding-top: 14px;
+        padding-top: 12px;
       }
 
       .sectionTitle {
@@ -245,6 +248,9 @@
 
       .sectionMeta {
         flex: 0 0 auto;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--color-surface-soft);
         color: var(--color-muted);
         font-size: 12px;
         font-weight: 700;
@@ -253,15 +259,15 @@
       .highlightList {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
         margin-top: 0;
       }
 
       .emptyState,
       .loadingState {
-        padding: 18px 15px;
+        padding: 18px 16px;
         border: 1px dashed var(--color-border);
-        border-radius: 12px;
+        border-radius: 14px;
         background: var(--color-surface-soft);
         color: var(--color-muted);
         font-size: 13px;
@@ -272,14 +278,15 @@
 
       .emptyState {
         border-style: solid;
+        background: #fbfdff;
         text-align: left;
       }
 
       .emptyStateTitle {
         margin-bottom: 6px;
         color: var(--color-text);
-        font-size: 14px;
-        font-weight: 700;
+        font-size: 15px;
+        font-weight: 800;
       }
 
       .emptyStateDescription {
@@ -288,8 +295,7 @@
 
       .emptyStateSteps {
         margin: 0;
-        padding: 0;
-        list-style-position: inside;
+        padding-left: 20px;
       }
 
       .emptyStateSteps li + li {
@@ -299,11 +305,11 @@
       .emptyStateNextAction {
         margin: 14px 0 0;
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: 12px;
         border: 1px solid #c9dcff;
         background: var(--color-primary-soft);
         color: #174ea6;
-        font-weight: 700;
+        font-weight: 800;
       }
 
       .loadingState {
@@ -326,12 +332,13 @@
         min-height: 56px;
         padding: 15px 64px 15px 15px;
         border: 1px solid var(--color-border);
-        border-radius: 12px;
+        border-radius: 14px;
         background: var(--color-surface);
         color: inherit;
         cursor: pointer;
         font: inherit;
         text-align: left;
+        box-shadow: var(--shadow-item);
       }
 
       .highlightOpenBtn:hover {
@@ -341,11 +348,11 @@
 
       .highlightSnippet {
         display: block;
-        margin-bottom: 6px;
+        margin-bottom: 7px;
         color: var(--color-text);
         font-size: 14px;
-        font-weight: 700;
-        line-height: 1.45;
+        font-weight: 800;
+        line-height: 1.5;
         word-break: break-word;
       }
 
@@ -362,6 +369,7 @@
         overflow: hidden;
         color: var(--color-muted);
         font-size: 12px;
+        font-weight: 600;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -379,18 +387,20 @@
 
       .deleteBtn {
         position: absolute;
-        top: 8px;
-        right: 8px;
+        top: 9px;
+        right: 9px;
         z-index: 1;
-        width: 48px;
-        height: 48px;
-        border: 0;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--color-border-soft);
         border-radius: 999px;
-        background: transparent;
+        background: #ffffff;
         color: var(--color-muted);
         cursor: pointer;
         font-size: 20px;
+        font-weight: 700;
         line-height: 1;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
       }
 
       .deleteBtn:hover {
