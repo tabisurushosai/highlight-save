@@ -68,6 +68,20 @@ function setStatusMessage(message: string, tone: "success" | "error", clearAfter
   }
 }
 
+function renderEmptyState(listContainer: HTMLElement) {
+  listContainer.innerHTML = `
+    <div class="emptyState" role="note">
+      <div class="emptyStateTitle">${chrome.i18n.getMessage("emptyStateTitle")}</div>
+      <p class="emptyStateDescription">${chrome.i18n.getMessage("emptyStateDescription")}</p>
+      <ol class="emptyStateSteps">
+        <li>${chrome.i18n.getMessage("emptyStateStepSelect")}</li>
+        <li>${chrome.i18n.getMessage("emptyStateStepSave")}</li>
+        <li>${chrome.i18n.getMessage("emptyStateStepReview")}</li>
+      </ol>
+    </div>
+  `;
+}
+
 async function renderHighlights() {
   const listContainer = document.getElementById("listContainer");
   if (!listContainer) return;
@@ -78,6 +92,10 @@ async function renderHighlights() {
   const data = await chromeHighlightStorage.load();
   const highlights = data.highlights;
   const isPremium = data.isPremium;
+  const onboardingGuide = document.getElementById("onboardingGuide");
+  if (onboardingGuide) {
+    onboardingGuide.hidden = highlights.length > 0;
+  }
 
   // Render Premium Status
   const premiumInfo = document.getElementById("premiumInfo");
@@ -113,7 +131,7 @@ async function renderHighlights() {
   listContainer.removeAttribute("aria-busy");
 
   if (highlights.length === 0) {
-    listContainer.innerHTML = `<div class="emptyState">${chrome.i18n.getMessage("noHighlights")}</div>`;
+    renderEmptyState(listContainer);
     return;
   }
 
@@ -216,6 +234,7 @@ if (app) {
   app.innerHTML = `
     <div id="premiumInfo" class="premiumArea"></div>
     <div class="savePanel">
+      <p id="onboardingGuide" class="onboardingGuide">${chrome.i18n.getMessage("onboardingGuide")}</p>
       <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
       <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}">
       <button type="button" id="saveBtn" class="primaryButton">${chrome.i18n.getMessage("saveButton")}</button>
