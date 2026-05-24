@@ -3,23 +3,23 @@ import type {
   HighlightStorageAdapter,
   HighlightStorageBackend,
   HighlightStorageItems,
+  HighlightStorageKey,
   HighlightStorageState,
 } from "./types";
 
-const HIGHLIGHTS_KEY = "highlights";
-const IS_PREMIUM_KEY = "isPremium";
-const TRIAL_START_TS_KEY = "trial_start_ts";
-const STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const;
+const HIGHLIGHTS_KEY = "highlights" satisfies HighlightStorageKey;
+const IS_PREMIUM_KEY = "isPremium" satisfies HighlightStorageKey;
+const TRIAL_START_TS_KEY = "trial_start_ts" satisfies HighlightStorageKey;
+const STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const satisfies readonly HighlightStorageKey[];
 
-interface ChromeStorageData {
-  highlights?: unknown;
-  isPremium?: unknown;
-  trial_start_ts?: unknown;
+interface ContentChromeStorageArea {
+  get(keys: readonly string[]): Promise<HighlightStorageItems>;
+  set(items: HighlightStorageItems): Promise<void>;
 }
 
-function createContentChromeStorageBackend(storageArea: chrome.storage.StorageArea): HighlightStorageBackend {
+function createContentChromeStorageBackend(storageArea: ContentChromeStorageArea): HighlightStorageBackend {
   return {
-    async read(keys: readonly string[]): Promise<HighlightStorageItems> {
+    async read(keys: readonly HighlightStorageKey[]): Promise<HighlightStorageItems> {
       return storageArea.get([...keys]);
     },
 
@@ -34,24 +34,21 @@ function toHighlightList(value: unknown): Highlight[] {
 }
 
 function toHighlightStorageState(value: HighlightStorageItems): HighlightStorageState {
-  const data = value as ChromeStorageData;
-  const trialStartTs = typeof data.trial_start_ts === "number" ? data.trial_start_ts : undefined;
-
   return {
-    highlights: toHighlightList(data.highlights),
-    isPremium: data.isPremium === true,
-    trialStartTs,
+    highlights: toHighlightList(value[HIGHLIGHTS_KEY]),
+    isPremium: value[IS_PREMIUM_KEY] === true,
+    trialStartTs: typeof value[TRIAL_START_TS_KEY] === "number" ? value[TRIAL_START_TS_KEY] : undefined,
   };
 }
 
 export function createContentChromeHighlightStorage(
-  storageArea: chrome.storage.StorageArea = chrome.storage.local,
+  storageArea: ContentChromeStorageArea = chrome.storage.local,
 ): HighlightStorageAdapter {
   const storageBackend = createContentChromeStorageBackend(storageArea);
 
   return {
     async load(): Promise<HighlightStorageState> {
-      return toHighlightStorageState(await storageBackend.read([...STORAGE_KEYS]));
+      return toHighlightStorageState(await storageBackend.read(STORAGE_KEYS));
     },
 
     async saveHighlights(highlights: Highlight[]): Promise<void> {
