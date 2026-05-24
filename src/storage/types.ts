@@ -6,6 +6,11 @@ export interface HighlightStorageState {
   trialStartTs?: number;
 }
 
+export interface KeyValueStorageArea {
+  get(keys: string[]): Promise<unknown>;
+  set(items: Record<string, unknown>): Promise<void>;
+}
+
 export interface HighlightStorageAdapter {
   load(): Promise<HighlightStorageState>;
   saveHighlights(highlights: Highlight[]): Promise<void>;
