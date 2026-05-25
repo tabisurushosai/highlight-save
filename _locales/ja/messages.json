@@ -1,21 +1,21 @@
 {
   "extName": { "message": "えらんで保存" },
-  "extDesc": { "message": "ページ上で選んだ文章をハイライトとして保存し、あとからまとめて見返せます。調べものや学習に便利です。" },
+  "extDesc": { "message": "ページで選んだ文章をハイライトとして保存し、あとからまとめて見返せます。調べものや学習に便利です。" },
   "appName": { "message": "えらんで保存" },
-  "noHighlights": { "message": "保存済みのハイライトはありません" },
-  "emptyStateKicker": { "message": "初回の流れ" },
-  "emptyStateTitle": { "message": "気になる文章を選ぶと、ここにハイライトとして保存されます" },
-  "emptyStateDescription": { "message": "保存したハイライトはこの一覧に並び、あとから取得元ページへ戻れます。" },
+  "noHighlights": { "message": "保存したハイライトはまだありません" },
+  "emptyStateKicker": { "message": "使い方" },
+  "emptyStateTitle": { "message": "気になる文章を選択すると、ここにハイライトとして保存されます" },
+  "emptyStateDescription": { "message": "保存したハイライトはこの一覧に並び、あとから取得元ページに戻れます。" },
   "emptyStateStepSelect": { "message": "Webページで残したい文章をドラッグして選択する" },
   "emptyStateStepSave": { "message": "ツールバーからこのポップアップを開き、「選択を保存」を押す" },
   "emptyStateStepReview": { "message": "保存後はこの一覧で内容を確認し、取得元ページを開く" },
   "emptyStateNextAction": { "message": "まずこのポップアップを閉じて、保存したい文章をページ上で選択してください。" },
-  "onboardingGuide": { "message": "初回ガイド: ページの文章を選択してから「選択を保存」を押します。" },
+  "onboardingGuide": { "message": "使い方: ページの文章を選択してから「選択を保存」を押します。" },
   "saveButton": { "message": "選択を保存" },
-  "savingButton": { "message": "保存中..." },
-  "savingHighlight": { "message": "選択した文章を保存しています..." },
+  "savingButton": { "message": "保存中…" },
+  "savingHighlight": { "message": "選択した文章を保存しています…" },
   "savedSuccess": { "message": "保存しました" },
-  "deletingHighlight": { "message": "削除しています..." },
+  "deletingHighlight": { "message": "削除しています…" },
   "deletedSuccess": { "message": "削除しました" },
   "noSelectionError": { "message": "ページ上の文章を選択してから、もう一度「選択を保存」を押してください" },
   "genericError": { "message": "処理中にエラーが発生しました" },
@@ -46,13 +46,14 @@
       "days": { "content": "$1" }
     }
   },
+  "trialEnded": { "message": "トライアルは終了しました" },
   "purchaseConfirm": {
     "message": "Premiumを有効にしますか？（デモ：$PRICE$）",
     "placeholders": {
       "price": { "content": "$1" }
     }
   },
-  "loadingHighlights": { "message": "保存済みハイライトを読み込んでいます..." },
+  "loadingHighlights": { "message": "保存済みハイライトを読み込んでいます…" },
   "deleteButton": { "message": "このハイライトを削除" },
   "openHighlight": { "message": "取得元ページを開く" },
   "highlightListLabel": { "message": "保存済みハイライト" },

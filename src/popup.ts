@@ -62,6 +62,10 @@ function formatPremiumPrice(): string {
 }
 
 function getTrialRemainingMessage(remainingDays: number): string {
+  if (remainingDays <= 0) {
+    return chrome.i18n.getMessage("trialEnded");
+  }
+
   const messageName = remainingDays === 1 ? "trialRemainingOne" : "trialRemainingOther";
   return chrome.i18n.getMessage(messageName, [formatNumber(remainingDays)]);
 }
