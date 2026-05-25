@@ -99,6 +99,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        margin: 0;
         padding: 14px;
         border: 1px solid var(--color-border-soft);
         border-radius: 16px;
@@ -161,7 +162,7 @@
       .highlightOpenBtn:focus-visible,
       .deleteBtn:focus-visible {
         outline: 3px solid var(--color-focus);
-        outline-offset: 2px;
+        outline-offset: 3px;
         box-shadow: 0 0 0 5px rgb(11 87 208 / 18%);
       }
 
@@ -180,6 +181,7 @@
         font: inherit;
         font-weight: 800;
         letter-spacing: 0.01em;
+        touch-action: manipulation;
       }
 
       .primaryButton {
@@ -390,8 +392,8 @@
       .highlightOpenBtn {
         display: block;
         width: 100%;
-        min-height: 56px;
-        padding: 15px 68px 15px 15px;
+        min-height: 64px;
+        padding: 16px 78px 16px 16px;
         border: 1px solid var(--color-border);
         border-radius: 14px;
         background: var(--color-surface);
@@ -400,6 +402,7 @@
         font: inherit;
         text-align: left;
         box-shadow: var(--shadow-item);
+        touch-action: manipulation;
       }
 
       .highlightOpenBtn:hover {
@@ -449,11 +452,14 @@
 
       .deleteBtn {
         position: absolute;
-        top: 8px;
-        right: 8px;
+        top: 10px;
+        right: 10px;
         z-index: 1;
-        width: 44px;
-        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
         border: 1px solid var(--color-border-soft);
         border-radius: 999px;
         background: #ffffff;
@@ -463,6 +469,7 @@
         font-weight: 700;
         line-height: 1;
         box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
+        touch-action: manipulation;
       }
 
       .deleteBtn:hover {

@@ -194,7 +194,8 @@ async function renderHighlights() {
     const tagHtml = item.tag ? `<span class="tagPill">${escapeHtml(`#${item.tag}`)}</span>` : "";
     return `
       <div class="highlightItem" role="listitem">
-        <button type="button" class="highlightOpenBtn" data-url="${escapeHtml(item.url)}" aria-label="${escapeHtml(openLabel)}: ${escapeHtml(snippet)}" title="${escapeHtml(openLabel)}">
+        <button type="button" class="highlightOpenBtn" data-url="${escapeHtml(item.url)}" title="${escapeHtml(openLabel)}">
+          <span class="visuallyHidden">${escapeHtml(openLabel)}: </span>
           <span class="highlightSnippet">${tagHtml}${escapeHtml(snippet)}</span>
           <span class="highlightSavedAt">${escapeHtml(savedAt)}</span>
           <span class="highlightUrl">
@@ -250,6 +251,9 @@ async function deleteHighlight(ts: number) {
 }
 
 async function saveSelection() {
+  const saveButton = getTypedElementById("saveBtn", HTMLButtonElement);
+  if (saveButton?.disabled) return;
+
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return;
 
@@ -310,13 +314,13 @@ if (app) {
   saveButtonLabel = chrome.i18n.getMessage("saveButton");
   app.innerHTML = `
     <div id="premiumInfo" class="premiumArea" aria-live="polite" aria-atomic="true"></div>
-    <div class="savePanel">
+    <form id="saveForm" class="savePanel" aria-describedby="onboardingGuide">
       <p id="onboardingGuide" class="onboardingGuide">${chrome.i18n.getMessage("onboardingGuide")}</p>
       <label class="fieldLabel" for="tagInput">${chrome.i18n.getMessage("tagPlaceholder")}</label>
       <p id="tagInputHelp" class="visuallyHidden">${chrome.i18n.getMessage("tagInputHelp")}</p>
       <input type="text" id="tagInput" class="textInput" placeholder="${chrome.i18n.getMessage("tagPlaceholder")}" autocomplete="off" aria-describedby="tagInputHelp">
-      <button type="button" id="saveBtn" class="primaryButton" aria-disabled="false" aria-busy="false">${saveButtonLabel}</button>
-    </div>
+      <button type="submit" id="saveBtn" class="primaryButton" aria-disabled="false" aria-busy="false">${saveButtonLabel}</button>
+    </form>
     <div id="status" class="statusMessage" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="sectionHeader">
       <h2 id="highlightListTitle" class="sectionTitle">${chrome.i18n.getMessage("highlightListLabel")}</h2>
@@ -325,6 +329,9 @@ if (app) {
     <p id="listInteractionHint" class="visuallyHidden">${chrome.i18n.getMessage("listInteractionHint")}</p>
     <div id="listContainer" class="highlightList" aria-live="polite" aria-labelledby="highlightListTitle"></div>
   `;
-  document.getElementById("saveBtn")?.addEventListener("click", saveSelection);
+  getTypedElementById("saveForm", HTMLFormElement)?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void saveSelection();
+  });
   renderHighlights();
 }
