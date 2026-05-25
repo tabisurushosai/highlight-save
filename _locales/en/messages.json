@@ -10,6 +10,7 @@
   "emptyStateStepSave": { "message": "Open this popup from the toolbar and click \"Save selection\"" },
   "emptyStateStepReview": { "message": "After saving, review it here and open the source page from the list" },
   "emptyStateNextAction": { "message": "Close this popup first, then select the text you want to save on the page." },
+  "emptyStateReturnButton": { "message": "Return to the page to select text" },
   "onboardingGuide": { "message": "Tip: select text on the page, then click \"Save selection\"." },
   "saveButton": { "message": "Save selection" },
   "savingButton": { "message": "Saving..." },
