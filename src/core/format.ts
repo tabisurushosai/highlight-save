@@ -1,5 +1,35 @@
 export type SupportedLocale = "ja" | "en";
 
+interface LocaleFormat {
+  intlLocale: string;
+  dateTimeOptions: Intl.DateTimeFormatOptions;
+}
+
+const LOCALE_FORMATS: Record<SupportedLocale, LocaleFormat> = {
+  ja: {
+    intlLocale: "ja-JP",
+    dateTimeOptions: {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    },
+  },
+  en: {
+    intlLocale: "en-US",
+    dateTimeOptions: {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    },
+  },
+};
+
 export function normalizeLocale(locale?: string): string | undefined {
   const trimmedLocale = locale?.trim();
 
@@ -12,12 +42,16 @@ export function resolveSupportedLocale(locale?: string): SupportedLocale {
   return language === "en" ? "en" : "ja";
 }
 
+function getLocaleFormat(locale?: string): LocaleFormat {
+  return LOCALE_FORMATS[resolveSupportedLocale(locale)];
+}
+
 export function formatLocalizedNumber(value: number, locale?: string): string {
-  return new Intl.NumberFormat(normalizeLocale(locale)).format(value);
+  return new Intl.NumberFormat(getLocaleFormat(locale).intlLocale).format(value);
 }
 
 export function formatLocalizedCurrency(value: number, currency: string, locale?: string): string {
-  return new Intl.NumberFormat(normalizeLocale(locale), {
+  return new Intl.NumberFormat(getLocaleFormat(locale).intlLocale, {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
@@ -26,11 +60,10 @@ export function formatLocalizedCurrency(value: number, currency: string, locale?
 }
 
 export function formatLocalizedDateTime(timestamp: number, locale?: string): string {
-  return new Intl.DateTimeFormat(normalizeLocale(locale), {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(timestamp));
+  const localeFormat = getLocaleFormat(locale);
+
+  return new Intl.DateTimeFormat(
+    localeFormat.intlLocale,
+    localeFormat.dateTimeOptions,
+  ).format(new Date(timestamp));
 }

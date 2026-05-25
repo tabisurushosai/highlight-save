@@ -1,16 +1,16 @@
 {
   "extName": { "message": "Pick & Save" },
-  "extDesc": { "message": "Save highlighted text from pages and review it later in one place." },
+  "extDesc": { "message": "Save selected text from web pages and review it later in one place." },
   "appName": { "message": "Pick & Save" },
   "noHighlights": { "message": "No saved highlights" },
   "emptyStateKicker": { "message": "Quick start" },
-  "emptyStateTitle": { "message": "Select text to save it here" },
+  "emptyStateTitle": { "message": "Select text to save highlights here" },
   "emptyStateDescription": { "message": "Saved highlights appear in this list so you can return to the source page later." },
-  "emptyStateStepSelect": { "message": "Drag to select text you want to keep on a web page" },
-  "emptyStateStepSave": { "message": "Open this popup from the toolbar and choose \"Save selection\"" },
+  "emptyStateStepSelect": { "message": "Drag over text you want to keep on a web page" },
+  "emptyStateStepSave": { "message": "Open this popup from the toolbar and click \"Save selection\"" },
   "emptyStateStepReview": { "message": "After saving, review it here and open the source page from the list" },
   "emptyStateNextAction": { "message": "Close this popup first, then select the text you want to save on the page." },
-  "onboardingGuide": { "message": "First-time tip: select text on the page, then press \"Save selection\"." },
+  "onboardingGuide": { "message": "Tip: select text on the page, then click \"Save selection\"." },
   "saveButton": { "message": "Save selection" },
   "savingButton": { "message": "Saving..." },
   "savingHighlight": { "message": "Saving the selected text..." },
@@ -46,6 +46,7 @@
       "days": { "content": "$1" }
     }
   },
+  "trialEnded": { "message": "Trial has ended" },
   "purchaseConfirm": {
     "message": "Activate Premium for this demo? ($PRICE$)",
     "placeholders": {
@@ -58,7 +59,7 @@
   "highlightListLabel": { "message": "Saved highlights" },
   "listInteractionHint": { "message": "Focus a highlight button and press Enter or Space to open the source page. Use its delete button to remove the highlight." },
   "savedAt": {
-    "message": "Saved on $DATETIME$",
+    "message": "Saved: $DATETIME$",
     "placeholders": {
       "datetime": { "content": "$1" }
     }
