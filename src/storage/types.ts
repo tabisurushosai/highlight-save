@@ -10,11 +10,20 @@ export interface HighlightStorageState {
 
 export type HighlightStorageItems = Partial<Record<HighlightStorageKey, unknown>>;
 
+/**
+ * Minimal async key-value boundary for platform storage.
+ *
+ * Chrome, native, and tests can implement this interface while reusable
+ * highlight rules stay in src/core without platform imports.
+ */
 export interface HighlightStorageBackend {
   read(keys: readonly HighlightStorageKey[]): Promise<HighlightStorageItems>;
   write(items: HighlightStorageItems): Promise<void>;
 }
 
+/**
+ * Application-facing storage contract used by UI/platform shells.
+ */
 export interface HighlightStorageAdapter {
   load(): Promise<HighlightStorageState>;
   saveHighlights(highlights: Highlight[]): Promise<void>;
