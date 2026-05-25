@@ -10,6 +10,7 @@
   "emptyStateStepSave": { "message": "ツールバーからこのポップアップを開き、「選択を保存」を押す" },
   "emptyStateStepReview": { "message": "保存後はこの一覧で内容を確認し、取得元ページを開く" },
   "emptyStateNextAction": { "message": "まずこのポップアップを閉じて、保存したい文章をページ上で選択してください。" },
+  "emptyStateReturnButton": { "message": "ページに戻って文章を選択する" },
   "onboardingGuide": { "message": "使い方: ページの文章を選択してから「選択を保存」を押します。" },
   "saveButton": { "message": "選択を保存" },
   "savingButton": { "message": "保存中…" },

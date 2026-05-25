@@ -159,6 +159,7 @@
       .textInput:focus-visible,
       .primaryButton:focus-visible,
       .secondaryButton:focus-visible,
+      .emptyStateAction:focus-visible,
       .highlightOpenBtn:focus-visible,
       .deleteBtn:focus-visible {
         outline: 3px solid var(--color-focus);
@@ -365,6 +366,23 @@
         font-weight: 800;
       }
 
+      .emptyStateAction {
+        width: 100%;
+        min-height: 46px;
+        border: 1px solid #c9dcff;
+        border-radius: 12px;
+        background: var(--color-primary-soft);
+        color: #174ea6;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        touch-action: manipulation;
+      }
+
+      .emptyStateAction:hover {
+        background: #dceafe;
+      }
+
       .loadingState {
         display: flex;
         align-items: center;
@@ -482,6 +500,7 @@
         .textInput:focus-visible,
         .primaryButton:focus-visible,
         .secondaryButton:focus-visible,
+        .emptyStateAction:focus-visible,
         .highlightOpenBtn:focus-visible,
         .deleteBtn:focus-visible {
           outline: 3px solid Highlight;

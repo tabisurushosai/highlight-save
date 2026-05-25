@@ -115,18 +115,22 @@ function renderEmptyState(listContainer: HTMLElement) {
   listContainer.removeAttribute("role");
   listContainer.removeAttribute("aria-describedby");
   listContainer.innerHTML = `
-    <div class="emptyState" role="note">
+    <section class="emptyState" aria-labelledby="emptyStateTitle" aria-describedby="emptyStateDescription emptyStateNextAction">
       <p class="emptyStateKicker">${chrome.i18n.getMessage("emptyStateKicker")}</p>
-      <div class="emptyStateTitle">${chrome.i18n.getMessage("emptyStateTitle")}</div>
-      <p class="emptyStateDescription">${chrome.i18n.getMessage("emptyStateDescription")}</p>
+      <div id="emptyStateTitle" class="emptyStateTitle">${chrome.i18n.getMessage("emptyStateTitle")}</div>
+      <p id="emptyStateDescription" class="emptyStateDescription">${chrome.i18n.getMessage("emptyStateDescription")}</p>
       <ol class="emptyStateSteps">
         <li>${chrome.i18n.getMessage("emptyStateStepSelect")}</li>
         <li>${chrome.i18n.getMessage("emptyStateStepSave")}</li>
         <li>${chrome.i18n.getMessage("emptyStateStepReview")}</li>
       </ol>
-      <p class="emptyStateNextAction">${chrome.i18n.getMessage("emptyStateNextAction")}</p>
-    </div>
+      <p id="emptyStateNextAction" class="emptyStateNextAction">${chrome.i18n.getMessage("emptyStateNextAction")}</p>
+      <button type="button" id="emptyStateReturnButton" class="emptyStateAction">${chrome.i18n.getMessage("emptyStateReturnButton")}</button>
+    </section>
   `;
+  getTypedElementById("emptyStateReturnButton", HTMLButtonElement)?.addEventListener("click", () => {
+    window.close();
+  });
 }
 
 async function renderHighlights() {
