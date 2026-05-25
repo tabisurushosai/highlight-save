@@ -14,9 +14,9 @@ highlight-save keeps browser-specific code at the edge so the same saved data ca
 - App code should read and write saved data through the `HighlightStorageAdapter` interface in `src/storage/types.ts`.
 - `src/storage/adapter.ts` builds a `HighlightStorageAdapter` from a small `HighlightStorageBackend`: `read(keys)` and `write(items)`.
 - `HighlightStorageBackend` is the platform edge: Chrome, iOS, Android, or test code can implement it without changing `src/core`; it only accepts the persisted keys typed by `HighlightStorageKey`.
-- The popup Chrome implementation maps that backend to `chrome.storage.local` in `src/storage/chromeBackend.ts`.
+- The popup Chrome implementation maps that backend to `chrome.storage.local` in `src/storage/chromeBackend.ts` and is exposed as `chromeHighlightStorage` from `src/storage/chromeStorage.ts`.
 - `src/storage/schema.ts` owns the persisted keys and converts raw platform storage values into `HighlightStorageState` for reusable adapters.
-- `src/storage/contentChromeStorage.ts` keeps the MV3 content script self-contained for Chrome loading while sharing the same typed storage contract and persisted key names.
+- `src/storage/contentChromeStorage.ts` keeps the MV3 content script self-contained for Chrome loading while still implementing the same `HighlightStorageAdapter` contract and persisted key names.
 - Native ports should add their own adapter with the same interface and persist the same keys/data shape, for example:
   - `highlights`
   - `isPremium`
@@ -24,6 +24,29 @@ highlight-save keeps browser-specific code at the edge so the same saved data ca
 - If a native store already exposes async key-value access, prefer reusing `createHighlightStorageAdapter` with that backend instead of duplicating conversion logic.
 - Keep platform adapters under `src/storage` or the platform shell. Do not import Chrome-specific modules such as `chromeBackend.ts`, `chromeStorage.ts`, or `contentChromeStorage.ts` from shared mobile code.
 - Do not add remote sync or external APIs unless the product spec changes.
+
+### Adapter shape for native shells
+
+Native shells should keep their platform APIs behind `HighlightStorageBackend`:
+
+```ts
+import { createHighlightStorageAdapter } from "./storage/adapter";
+import type { HighlightStorageBackend } from "./storage/types";
+
+const nativeBackend: HighlightStorageBackend = {
+  async read(keys) {
+    // Return an object whose properties are the requested persisted keys.
+    return nativeStore.getMany(keys);
+  },
+  async write(items) {
+    await nativeStore.setMany(items);
+  },
+};
+
+export const nativeHighlightStorage = createHighlightStorageAdapter(nativeBackend);
+```
+
+The object returned by `read` must keep the same stored values used by the extension. Let `src/storage/schema.ts` apply defaults instead of adding platform-specific defaults in `src/core`.
 
 ### Native storage checklist
 

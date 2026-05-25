@@ -1,4 +1,5 @@
 import type { Highlight } from "../core/highlights";
+import type { ChromeStorageArea } from "./chromeBackend";
 import type {
   HighlightStorageAdapter,
   HighlightStorageBackend,
@@ -12,12 +13,7 @@ const IS_PREMIUM_KEY = "isPremium" satisfies HighlightStorageKey;
 const TRIAL_START_TS_KEY = "trial_start_ts" satisfies HighlightStorageKey;
 const STORAGE_KEYS = [HIGHLIGHTS_KEY, IS_PREMIUM_KEY, TRIAL_START_TS_KEY] as const satisfies readonly HighlightStorageKey[];
 
-interface ContentChromeStorageArea {
-  get(keys: readonly string[]): Promise<HighlightStorageItems>;
-  set(items: HighlightStorageItems): Promise<void>;
-}
-
-function createContentChromeStorageBackend(storageArea: ContentChromeStorageArea): HighlightStorageBackend {
+function createContentChromeStorageBackend(storageArea: ChromeStorageArea): HighlightStorageBackend {
   return {
     async read(keys: readonly HighlightStorageKey[]): Promise<HighlightStorageItems> {
       return storageArea.get([...keys]);
@@ -42,7 +38,7 @@ function toHighlightStorageState(value: HighlightStorageItems): HighlightStorage
 }
 
 export function createContentChromeHighlightStorage(
-  storageArea: ContentChromeStorageArea = chrome.storage.local,
+  storageArea: ChromeStorageArea = chrome.storage.local,
 ): HighlightStorageAdapter {
   const storageBackend = createContentChromeStorageBackend(storageArea);
 
